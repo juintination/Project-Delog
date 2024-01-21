@@ -24,6 +24,17 @@ const getUserById = async (userId) => {
 // 새로운 유저 추가(CREATE)
 const createUser = async (userData) => {
   try {
+    await prisma.profile.create({
+      data: {
+        id: userData.id,
+      }
+    })
+  } catch (err) {
+    console.error('Error in createUser: ', err.stack);
+    throw new Error('Failed to create profile');
+  }
+
+  try {
     userData.birth = new Date(userData.birth);
     return await prisma.user.create({
     data: userData,
@@ -49,6 +60,15 @@ const updateUser = async (userId, userData) => {
 
 // 유저 삭제(DELETE)
 const deleteUser = async (userId) => {
+  try {
+    await prisma.profile.delete({
+    where: { id: userId },
+    })
+  } catch (err) {
+    console.error('Error in createUser: ', err.stack);
+    throw new Error('Failed to delete profile');
+  }
+
   try {
     return await prisma.user.delete({
     where: { id: userId },
