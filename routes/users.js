@@ -2,21 +2,22 @@ const express = require('express');
 const router = express.Router();
 
 const {
-  getAllUserInfo,
-  getUserInfoById,
-  createUserByData,
-  updateUserById,
-  deleteUserById,
-} = require('../controllers/user-controller');
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+} = require('../services/user-service');
 
 // 전체 유저 조회(READ)
 router.get('/all', async (req, res) => {
   try {
-    const users = await getAllUserInfo();
+    const users = await getAllUsers();
     res.status(200).json(users);
   } catch (err) {
     console.error('Error is getAllUsers route: ', err.stack);
     res.status(500).json({ error: 'Internal Server Error' });
+    throw new Error('Failed to get all users');
   }
 });
 
@@ -24,22 +25,25 @@ router.get('/all', async (req, res) => {
 router.get('/:userId', async (req, res) => {
   try {
     const userId = parseInt(req.params.userId);
-    const user = await getUserInfoById(userId);
+    const user = await getUserById(userId);
     res.status(200).json(user);
   } catch (err) {
     console.error('Error is getUserById route: ', err.stack);
     res.status(500).json({ error: 'Internal Server Error' });
+    throw new Error('Failed to get user by ID');
   }
 });
 
 // 새로운 유저 추가(CREATE)
 router.post('/create', async (req, res) => {
   try {
-    const user = await createUserByData(req.body);
+    const userData = req.body;
+    const user = await createUser(userData);
     res.status(200).json(user);
   } catch (err) {
     console.error('Error in createUserByData route: ', err.stack);
     res.status(500).json({ error: 'Failed to create user' });
+    throw new Error('Failed to create user');
   }
 });
 
@@ -47,11 +51,13 @@ router.post('/create', async (req, res) => {
 router.put('/update/:userId', async (req, res) => {
   try {
     const userId = parseInt(req.params.userId);
-    const updatedUser = await updateUserById(userId, req.body);
+    const userData = req.body;
+    const updatedUser = await updateUser(userId, userData);
     res.status(200).json(updatedUser);
   } catch (err) {
     console.error('Error is updateUserById route: ', err.stack);
     res.status(500).json({ error: 'Internal Server Error' });
+    throw new Error('Failed to update user');
   }
 });
 
@@ -59,11 +65,12 @@ router.put('/update/:userId', async (req, res) => {
 router.delete('/delete/:userId', async (req, res) => {
   try {
     const userId = parseInt(req.params.userId);
-    await deleteUserById(userId, req.body);
+    await deleteUser(userId);
     res.status(204).end();
   } catch (err) {
     console.error('Error is deleteUserById route: ', err.stack);
     res.status(500).json({ error: 'Internal Server Error' });
+    throw new Error('Failed to update user');
   }
 });
 
