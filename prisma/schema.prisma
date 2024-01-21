@@ -8,18 +8,18 @@ datasource db {
 }
 
 model Category {
-  id   BigInt  @id @default(autoincrement())
+  id   Int  @id @default(autoincrement())
   name String? @db.VarChar(20)
   Post Post[]
 }
 
 model Comment {
-  id         BigInt   @id @default(autoincrement())
+  id         Int   @id @default(autoincrement())
   content    String   @db.Text
   created_at DateTime @db.DateTime(0)
   is_secret  Int      @default(0) @db.TinyInt
-  user_id    BigInt
-  post_id    BigInt
+  user_id    Int
+  post_id    Int
   User       User     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comment_ibfk_1")
   Post       Post     @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comment_ibfk_2")
 
@@ -28,13 +28,13 @@ model Comment {
 }
 
 model Post {
-  id          BigInt    @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   title       String    @db.VarChar(20)
   content     String    @db.Text
   created_at  DateTime  @db.DateTime(0)
   is_public   Int       @default(1) @db.TinyInt
-  user_id     BigInt
-  category_id BigInt
+  user_id     Int
+  category_id Int
   Comment     Comment[]
   User        User      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "post_ibfk_1")
   Category    Category  @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "post_ibfk_2")
@@ -45,21 +45,21 @@ model Post {
 }
 
 model Profile {
-  id   BigInt  @id @default(autoincrement())
+  id   Int  @id @default(autoincrement())
   pic  Bytes?  @db.Blob
   info String? @db.VarChar(20)
 }
 
 model Tag {
-  id      BigInt    @id @default(autoincrement())
+  id      Int    @id @default(autoincrement())
   name    String    @db.VarChar(20)
   TagPost TagPost[]
 }
 
 model TagPost {
-  id      BigInt @id @default(autoincrement())
-  tag_id  BigInt
-  post_id BigInt
+  id      Int @id @default(autoincrement())
+  tag_id  Int
+  post_id Int
   Tag     Tag    @relation(fields: [tag_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tagpost_ibfk_1")
   Post    Post   @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tagpost_ibfk_2")
 
@@ -68,13 +68,13 @@ model TagPost {
 }
 
 model User {
-  id         BigInt    @id @default(autoincrement())
-  name       String    @db.VarChar(10)
-  birth      DateTime  @db.DateTime(0)
+  id         Int    @id @default(autoincrement())
+  name       String    @db.VarChar(20)
+  birth      DateTime  @db.Date
   email      String    @db.VarChar(20)
   pwd        String    @db.VarChar(20)
   is_admin   Int       @default(0) @db.TinyInt
-  profile_id BigInt
+  profile_id Int
   Comment    Comment[]
   Post       Post[]
 
