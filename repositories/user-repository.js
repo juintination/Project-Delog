@@ -24,6 +24,7 @@ const getUserById = async (userId) => {
 // 새로운 유저 추가(CREATE)
 const createUser = async (userData) => {
   try {
+    userData.birth = new Date(userData.birth);
     return await prisma.user.create({
     data: userData,
     })
