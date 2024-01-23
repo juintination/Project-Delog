@@ -12,12 +12,16 @@ const getAllUsers = async () => {
 };
 
 // 특정 유저 조회(READ)
-const getUserById = async (userId) => {
+const getUserByEmail = async (userEmail) => {
   try {
-    return await prisma.user.findUnique({ where: { id: userId }});
+    const users = await prisma.user.findMany({ where: { email: userEmail }})
+    if (users.length) {
+      const user = users[0];
+      return user;
+    }
   } catch (err) {
-    console.error('Error in getUserById: ', err.stack);
-    throw new Error('Failed to get user by ID');
+    console.error('Error in getUserByEmail: ', err.stack);
+    throw new Error('Failed to get user by Email');
   }
 };
 
@@ -81,7 +85,7 @@ const deleteUser = async (userId) => {
   
 module.exports = {
   getAllUsers,
-  getUserById,
+  getUserByEmail,
   createUser,
   updateUser,
   deleteUser,
