@@ -1,11 +1,12 @@
 const express = require('express');
 const http = require('http');
 const path = require('path');
+require('dotenv').config();
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const passport = require('passport');
-const Localstrategy = require('passport-local').Strategy;
+const flash = require('connect-flash');
 
 const app = express();
 app.set('port', process.env.PORT || 8080);
@@ -13,16 +14,30 @@ app.set('port', process.env.PORT || 8080);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // POST 데이터 파싱
 
+const passportSecretKey = process.env.PASSPORT_SECRET;
+app.use(cookieParser(passportSecretKey));
+app.use(session({
+  secret: passportSecretKey,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: false
+  }
+}));
+
+/* passport 미들웨어 */
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
 app.use(logger('dev'));
 
-const indexRouter = require('./routes/index');
-app.use('/', indexRouter);
+const configPassport = require('./config/passport');
+configPassport(app, passport);
 
-const loginRouter = require('./routes/login');
-app.use('/login', loginRouter);
-
-const logoutRouter = require('./routes/logout');
-app.use('/logout', logoutRouter);
+var userPassport = require('./routes/index');
+userPassport(app, passport);
 
 const userRouter = require('./routes/users');
 app.use('/user', userRouter);
