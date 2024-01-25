@@ -1,5 +1,5 @@
-var fakeLogin = require("./passport/fake_login")
 const usersLogin = require("./passport/users_login")
+const usersSignup = require("./passport/users_signup")
 
 module.exports = (app, passport) => {
   // 세션 처리 - 로그인에 성공했을 경우 딱 한번 호출되어 사용자의 식별자를 session에 저장
@@ -15,5 +15,6 @@ module.exports = (app, passport) => {
   })
 
   // 인증 방식
-  passport.use("local", usersLogin)
+  passport.use("local-login", usersLogin)
+  passport.use("local-signup", usersSignup)
 }

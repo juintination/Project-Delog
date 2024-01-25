@@ -6,7 +6,13 @@ html(lang='en')
     link(rel="stylesheet", href="/stylesheets/style.css")
     title #{title}
   body
-    form(action='/login', method='post')
+    form(action='/signup', method='post')
+      div
+        label(for='name') Name:
+        input(type='text', name='name')
+      div
+        label(for='birth') Birthdate:
+        input(type='date', name='birth')
       div
         label(for='email') Email:
         input(type='text', name='email')
@@ -14,7 +20,7 @@ html(lang='en')
         label(for='password') Password:
         input(type='password', name='password')
       div
-        input(type='submit', value='Log In')
+        label(for='confirmPassword') Confirm Password:
+        input(type='password', name='confirmPassword')
       div
-        p Don't have an account? 
-        a(href='/signup') Sign Up
+        input(type='submit', value='Sign Up')

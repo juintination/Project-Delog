@@ -10,15 +10,32 @@ module.exports = (app, passport) => {
 
   // login
   app.get("/login", (req, res) => {
-    res.render("login")
+    res.render("login", {
+      message: req.flash("loginMessage"),
+    })
   })
 
-  // register for login
   app.post(
-    "/register",
-    passport.authenticate("local", {
+    "/login",
+    passport.authenticate("local-login", {
       successRedirect: "/",
       failureRedirect: "/login",
+      failureFlash: true,
+    })
+  )
+
+  // signup
+  app.get("/signup", (req, res) => {
+    res.render("signup", {
+      message: req.flash("signupMessage"),
+    })
+  })
+
+  app.post(
+    "/signup",
+    passport.authenticate("local-signup", {
+      successRedirect: "/login",
+      failureRedirect: "/signup",
       failureFlash: true,
     })
   )
