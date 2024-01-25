@@ -28,11 +28,7 @@ const getUserByEmail = async (userEmail) => {
 // 새로운 유저 추가(CREATE)
 const createUser = async (userData) => {
   try {
-    await prisma.profile.create({
-      data: {
-        id: userData.id,
-      }
-    })
+    userProfile = await prisma.profile.create();
   } catch (err) {
     console.error('Error in createUser: ', err.stack);
     throw new Error('Failed to create profile');
@@ -40,9 +36,10 @@ const createUser = async (userData) => {
 
   try {
     userData.birth = new Date(userData.birth);
+    userData.profile_id = userProfile.id;
     return await prisma.user.create({
-    data: userData,
-    })
+      data: userData,
+    });
   } catch (err) {
     console.error('Error in createUser: ', err.stack);
     throw new Error('Failed to create user');
@@ -53,9 +50,9 @@ const createUser = async (userData) => {
 const updateUser = async (userId, userData) => {
   try {
     return await prisma.user.update({
-    where: { id: userId },
-    data: userData,
-    })
+      where: { id: userId },
+      data: userData,
+    });
   } catch (err) {
     console.error('Error in createUser: ', err.stack);
     throw new Error('Failed to update user');
@@ -66,8 +63,8 @@ const updateUser = async (userId, userData) => {
 const deleteUser = async (userId) => {
   try {
     await prisma.profile.delete({
-    where: { id: userId },
-    })
+      where: { id: userId },
+    });
   } catch (err) {
     console.error('Error in createUser: ', err.stack);
     throw new Error('Failed to delete profile');
@@ -75,8 +72,8 @@ const deleteUser = async (userId) => {
 
   try {
     return await prisma.user.delete({
-    where: { id: userId },
-    })
+      where: { id: userId },
+    });
   } catch (err) {
     console.error('Error in createUser: ', err.stack);
     throw new Error('Failed to delete user');
