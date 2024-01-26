@@ -42,7 +42,7 @@ router.post("/create", async (req, res) => {
     res.status(200).json(user)
   } catch (err) {
     console.error("Error in createUserByData route: ", err.stack)
-    res.status(500).json({ error: "Failed to create user" })
+    res.status(500).json({ error: "Internal Server Error" })
     throw new Error("Failed to create user")
   }
 })
@@ -70,7 +70,7 @@ router.delete("/delete/:userId", async (req, res) => {
   } catch (err) {
     console.error("Error is deleteUserById route: ", err.stack)
     res.status(500).json({ error: "Internal Server Error" })
-    throw new Error("Failed to update user")
+    throw new Error("Failed to delete user")
   }
 })
 
