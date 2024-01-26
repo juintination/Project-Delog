@@ -8,13 +8,13 @@ datasource db {
 }
 
 model Category {
-  id   Int  @id @default(autoincrement())
+  id   Int     @id @default(autoincrement())
   name String? @db.VarChar(20)
   Post Post[]
 }
 
 model Comment {
-  id         Int   @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   content    String   @db.Text
   created_at DateTime @db.DateTime(0)
   is_secret  Int      @default(0) @db.TinyInt
@@ -28,7 +28,7 @@ model Comment {
 }
 
 model Post {
-  id          Int    @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String    @db.VarChar(20)
   content     String    @db.Text
   created_at  DateTime  @db.DateTime(0)
@@ -45,30 +45,30 @@ model Post {
 }
 
 model Profile {
-  id   Int  @id @default(autoincrement())
-  pic  Bytes?  @db.Blob
-  info String? @db.VarChar(20)
+  id  Int     @id @default(autoincrement())
+  pic Bytes?  @db.Blob
+  bio String? @db.Text
 }
 
 model Tag {
-  id      Int    @id @default(autoincrement())
+  id      Int       @id @default(autoincrement())
   name    String    @db.VarChar(20)
   TagPost TagPost[]
 }
 
 model TagPost {
-  id      Int @id @default(autoincrement())
+  id      Int  @id @default(autoincrement())
   tag_id  Int
   post_id Int
-  Tag     Tag    @relation(fields: [tag_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tagpost_ibfk_1")
-  Post    Post   @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tagpost_ibfk_2")
+  Tag     Tag  @relation(fields: [tag_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tagpost_ibfk_1")
+  Post    Post @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tagpost_ibfk_2")
 
   @@index([post_id], map: "post_id")
   @@index([tag_id], map: "tag_id")
 }
 
 model User {
-  id         Int    @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   name       String    @db.VarChar(20)
   birth      DateTime  @db.Date
   email      String    @db.VarChar(20)
