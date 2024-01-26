@@ -54,7 +54,7 @@ const updateUser = async (userId, userData) => {
       data: userData,
     })
   } catch (err) {
-    console.error("Error in createUser: ", err.stack)
+    console.error("Error in updateUser: ", err.stack)
     throw new Error("Failed to update user")
   }
 }
@@ -66,7 +66,7 @@ const deleteUser = async (userId) => {
       where: { id: userId },
     })
   } catch (err) {
-    console.error("Error in createUser: ", err.stack)
+    console.error("Error in deleteUser: ", err.stack)
     throw new Error("Failed to delete profile")
   }
 
@@ -75,7 +75,7 @@ const deleteUser = async (userId) => {
       where: { id: userId },
     })
   } catch (err) {
-    console.error("Error in createUser: ", err.stack)
+    console.error("Error in deleteUser: ", err.stack)
     throw new Error("Failed to delete user")
   }
 }
