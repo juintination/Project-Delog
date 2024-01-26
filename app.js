@@ -44,6 +44,9 @@ userPassport(app, passport)
 const userRouter = require("./routes/users")
 app.use("/user", userRouter)
 
+const profileRouter = require("./routes/profiles")
+app.use("/profile", profileRouter)
+
 app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "jade")
 
