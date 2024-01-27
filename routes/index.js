@@ -13,10 +13,9 @@ const storage = multer.diskStorage({
   },
 })
 
-// Multer 설정
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 최대 파일 크기 설정 (예: 10MB)
+  limits: { fileSize: 10 * 1024 * 1024 },
 })
 
 module.exports = (app, passport) => {
@@ -88,23 +87,24 @@ module.exports = (app, passport) => {
       // 이미지 파일을 읽어와서 base64로 인코딩
       const picData = fs.readFileSync(req.file.path)
       picBase64 = Buffer.from(picData).toString("base64")
-    }
 
-    try {
-      // 업로드된 파일의 경로와 함께 프로필 정보를 서버에 전송
+      await axios.put(
+        `http://localhost:8080/profile/update/${updatedProfile.id}`,
+        {
+          nickname: updatedProfile.nickname,
+          pic: picBase64,
+          bio: updatedProfile.bio,
+        }
+      )
+    } else {
       await axios.put(
         `http://localhost:8080/profile/update/${updatedProfile.id}`,
         {
           nickname: updatedProfile.nickname,
           bio: updatedProfile.bio,
-          pic: picBase64, // 업로드된 파일의 경로를 서버에 전달
         }
       )
-
-      res.redirect("/")
-    } catch (error) {
-      console.error("Error updating profile:", error)
-      res.status(500).send("Internal Server Error")
     }
+    res.redirect("/")
   })
 }
