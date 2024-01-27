@@ -15,7 +15,7 @@ router.get("/all", async (req, res) => {
     const users = await getAllUsers()
     res.status(200).json(users)
   } catch (err) {
-    console.error("Error is getAllUsers route: ", err.stack)
+    console.error("Error in getAllUsers route: ", err.stack)
     res.status(500).json({ error: "Internal Server Error" })
     throw new Error("Failed to get all users")
   }
@@ -28,7 +28,7 @@ router.get("/:userEmail", async (req, res) => {
     const user = await getUserByEmail(userEmail)
     res.status(200).json(user)
   } catch (err) {
-    console.error("Error is getUserByEmail route: ", err.stack)
+    console.error("Error in getUserByEmail route: ", err.stack)
     res.status(500).json({ error: "Internal Server Error" })
     throw new Error("Failed to get user by Email")
   }
@@ -55,7 +55,7 @@ router.put("/update/:userId", async (req, res) => {
     const updatedUser = await updateUser(userId, userData)
     res.status(200).json(updatedUser)
   } catch (err) {
-    console.error("Error is updateUserById route: ", err.stack)
+    console.error("Error in updateUserById route: ", err.stack)
     res.status(500).json({ error: "Internal Server Error" })
     throw new Error("Failed to update user")
   }
@@ -68,7 +68,7 @@ router.delete("/delete/:userId", async (req, res) => {
     await deleteUser(userId)
     res.status(204).end()
   } catch (err) {
-    console.error("Error is deleteUserById route: ", err.stack)
+    console.error("Error in deleteUserById route: ", err.stack)
     res.status(500).json({ error: "Internal Server Error" })
     throw new Error("Failed to delete user")
   }
