@@ -44,12 +44,6 @@ model Post {
   @@index([user_id], map: "user_id")
 }
 
-model Profile {
-  id  Int     @id @default(autoincrement())
-  pic Bytes?  @db.Blob
-  bio String? @db.Text
-}
-
 model Tag {
   id      Int       @id @default(autoincrement())
   name    String    @db.VarChar(20)
@@ -79,4 +73,11 @@ model User {
   Post       Post[]
 
   @@index([profile_id], map: "profile_id")
+}
+
+model profile {
+  id       Int     @id @default(autoincrement())
+  pic      Bytes?  @db.Blob
+  bio      String? @db.Text
+  nickname String? @db.VarChar(20)
 }
