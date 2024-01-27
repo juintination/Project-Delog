@@ -8,6 +8,10 @@ html(lang='en')
   body
     p #{user.name}님 안녕하세요!
     p Nickname: #{profile.nickname}
+    if profile.pic
+      img(src=`/profile/pic/${profile.id}?${Date.now()}`, alt="Profile Picture")
+    else
+      p No profile picture available
     p Profile Bio: #{profile.bio}
     button(type='button', onclick="location.href='/logout'") Log Out
     button(type='button', onclick="location.href='/update_profile'") Update Profile

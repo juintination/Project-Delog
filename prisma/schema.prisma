@@ -75,9 +75,9 @@ model User {
   @@index([profile_id], map: "profile_id")
 }
 
-model profile {
+model Profile {
   id       Int     @id @default(autoincrement())
-  pic      Bytes?  @db.Blob
+  pic      Bytes?  @db.MediumBlob
   bio      String? @db.Text
   nickname String? @db.VarChar(20)
 }

@@ -15,7 +15,7 @@ router.get("/all", async (req, res) => {
     const profiles = await getAllProfiles()
     res.status(200).json(profiles)
   } catch (err) {
-    console.error("Error is getAllProfiles route: ", err.stack)
+    console.error("Error in getAllProfiles route: ", err.stack)
     res.status(500).json({ error: "Internal Server Error" })
     throw new Error("Failed to get all Profiles")
   }
@@ -28,9 +28,26 @@ router.get("/:profileId", async (req, res) => {
     const profile = await getProfileByProfileId(profileId)
     res.status(200).json(profile)
   } catch (err) {
-    console.error("Error is getProfileByProfileId route: ", err.stack)
+    console.error("Error in getProfileByProfileId route: ", err.stack)
     res.status(500).json({ error: "Internal Server Error" })
     throw new Error("Failed to get profile by profileId")
+  }
+})
+
+// 프로필 사진 조회(READ)
+router.get("/pic/:profileId", async (req, res) => {
+  try {
+    const profileId = parseInt(req.params.profileId)
+    const profile = await getProfileByProfileId(profileId)
+    if (!profile || !profile.pic) {
+      return res.sendStatus(404)
+    }
+    res.set("Content-Type", "image/jpeg")
+    res.send(profile.pic)
+  } catch (error) {
+    console.error("Error in getProfilePicByProfileId route: ", error)
+    res.status(500).json({ error: "Internal Server Error" })
+    throw new Error("Failed to get profilePic by profileId")
   }
 })
 
@@ -52,11 +69,10 @@ router.put("/update/:profileId", async (req, res) => {
   try {
     const profileId = parseInt(req.params.profileId)
     const profileData = req.body
-    console.log(profileData)
     const updatedProfile = await updateProfile(profileId, profileData)
     res.status(200).json(updatedProfile)
   } catch (err) {
-    console.error("Error is updateProfileById route: ", err.stack)
+    console.error("Error in updateProfileById route: ", err.stack)
     res.status(500).json({ error: "Internal Server Error" })
     throw new Error("Failed to update profile")
   }
@@ -69,7 +85,7 @@ router.delete("/delete/:profileId", async (req, res) => {
     await deleteProfile(profileId)
     res.status(204).end()
   } catch (err) {
-    console.error("Error is deleteProfileById route: ", err.stack)
+    console.error("Error in deleteProfileById route: ", err.stack)
     res.status(500).json({ error: "Internal Server Error" })
     throw new Error("Failed to delete profile")
   }

@@ -11,7 +11,7 @@ const flash = require("connect-flash")
 const app = express()
 app.set("port", process.env.PORT || 8080)
 
-app.use(express.json())
+app.use(express.json({ limit: "10mb" }))
 app.use(express.urlencoded({ extended: true })) // POST 데이터 파싱
 
 const passportSecretKey = process.env.PASSPORT_SECRET
