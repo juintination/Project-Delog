@@ -38,9 +38,11 @@ module.exports = (app, passport) => {
           const response = await axios.get(
             `http://localhost:8080/post/all/${category.id}`
           )
-          response.data.forEach((post) => {
-            posts.push(post)
-          })
+          if (response.data) {
+            response.data.forEach((post) => {
+              posts.push(post)
+            })
+          }
         })
       )
 
