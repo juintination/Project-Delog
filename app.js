@@ -53,6 +53,9 @@ app.use("/category", categoryRouter)
 const postRouter = require("./routes/posts")
 app.use("/post", postRouter)
 
+const commentRouter = require("./routes/comments")
+app.use("/comment", commentRouter)
+
 app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "jade")
 
