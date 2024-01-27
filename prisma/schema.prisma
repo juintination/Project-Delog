@@ -8,69 +8,25 @@ datasource db {
 }
 
 model Category {
-  id   Int     @id @default(autoincrement())
-  name String? @db.VarChar(20)
-  Post Post[]
-}
+  id      Int     @id @default(autoincrement())
+  name    String? @db.VarChar(20)
+  user_id Int?
+  User    User?   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "category_ibfk_1")
+  post    post[]
 
-model Comment {
-  id         Int      @id @default(autoincrement())
-  content    String   @db.Text
-  created_at DateTime @db.DateTime(0)
-  is_secret  Int      @default(0) @db.TinyInt
-  user_id    Int
-  post_id    Int
-  User       User     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comment_ibfk_1")
-  Post       Post     @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comment_ibfk_2")
-
-  @@index([post_id], map: "post_id")
   @@index([user_id], map: "user_id")
-}
-
-model Post {
-  id          Int       @id @default(autoincrement())
-  title       String    @db.VarChar(20)
-  content     String    @db.Text
-  created_at  DateTime  @db.DateTime(0)
-  is_public   Int       @default(1) @db.TinyInt
-  user_id     Int
-  category_id Int
-  Comment     Comment[]
-  User        User      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "post_ibfk_1")
-  Category    Category  @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "post_ibfk_2")
-  TagPost     TagPost[]
-
-  @@index([category_id], map: "category_id")
-  @@index([user_id], map: "user_id")
-}
-
-model Tag {
-  id      Int       @id @default(autoincrement())
-  name    String    @db.VarChar(20)
-  TagPost TagPost[]
-}
-
-model TagPost {
-  id      Int  @id @default(autoincrement())
-  tag_id  Int
-  post_id Int
-  Tag     Tag  @relation(fields: [tag_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tagpost_ibfk_1")
-  Post    Post @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tagpost_ibfk_2")
-
-  @@index([post_id], map: "post_id")
-  @@index([tag_id], map: "tag_id")
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  name       String    @db.VarChar(20)
-  birth      DateTime  @db.Date
-  email      String    @db.VarChar(20)
-  pwd        String    @db.VarChar(20)
-  is_admin   Int       @default(0) @db.TinyInt
+  id         Int        @id @default(autoincrement())
+  name       String     @db.VarChar(20)
+  birth      DateTime   @db.Date
+  email      String     @db.VarChar(20)
+  pwd        String     @db.VarChar(20)
+  is_admin   Int        @default(0) @db.TinyInt
   profile_id Int
-  Comment    Comment[]
-  Post       Post[]
+  Category   Category[]
+  comment    comment[]  @ignore
 
   @@index([profile_id], map: "profile_id")
 }
@@ -80,4 +36,31 @@ model Profile {
   pic      Bytes?  @db.MediumBlob
   bio      String? @db.Text
   nickname String? @db.VarChar(20)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model comment {
+  content    String   @db.Text
+  created_at DateTime @db.DateTime(0)
+  is_secret  Int      @default(0) @db.TinyInt
+  user_id    Int
+  post_id    Int
+  User       User     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comment_ibfk_1")
+
+  @@index([post_id], map: "post_id")
+  @@index([user_id], map: "user_id")
+  @@ignore
+}
+
+model post {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(20)
+  content     String   @db.Text
+  created_at  DateTime @db.DateTime(0)
+  is_public   Int      @default(1) @db.TinyInt
+  category_id Int
+  tags        Json?
+  Category    Category @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "post_ibfk_2")
+
+  @@index([category_id], map: "category_id")
 }
