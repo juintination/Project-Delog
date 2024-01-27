@@ -12,7 +12,7 @@ model Category {
   name    String? @db.VarChar(20)
   user_id Int?
   User    User?   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "category_ibfk_1")
-  post    post[]
+  Post    Post[]
 
   @@index([user_id], map: "user_id")
 }
@@ -26,7 +26,7 @@ model User {
   is_admin   Int        @default(0) @db.TinyInt
   profile_id Int
   Category   Category[]
-  comment    comment[]  @ignore
+  Comment    Comment[]  @ignore
 
   @@index([profile_id], map: "profile_id")
 }
@@ -39,28 +39,28 @@ model Profile {
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model comment {
-  content    String   @db.Text
-  created_at DateTime @db.DateTime(0)
-  is_secret  Int      @default(0) @db.TinyInt
+model Comment {
+  content    String    @db.Text
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+  is_secret  Int       @default(0) @db.TinyInt
   user_id    Int
   post_id    Int
-  User       User     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comment_ibfk_1")
+  User       User      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comment_ibfk_1")
 
   @@index([post_id], map: "post_id")
   @@index([user_id], map: "user_id")
   @@ignore
 }
 
-model post {
-  id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(20)
-  content     String   @db.Text
-  created_at  DateTime @db.DateTime(0)
-  is_public   Int      @default(1) @db.TinyInt
+model Post {
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(20)
+  content     String    @db.Text
+  created_at  DateTime? @default(now()) @db.Timestamp(0)
+  is_public   Int       @default(1) @db.TinyInt
   category_id Int
   tags        Json?
-  Category    Category @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "post_ibfk_2")
+  Category    Category  @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "post_ibfk_2")
 
   @@index([category_id], map: "category_id")
 }
