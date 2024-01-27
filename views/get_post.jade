@@ -1,0 +1,22 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(rel="stylesheet", href="/stylesheets/style.css")
+    title Post Details
+  body
+    h1 Post Details
+    if post
+      div
+        p Category: #{category.name}
+        p Title: #{post.title}
+        p Author: #{profile.nickname}
+        p Created At: #{post.created_at}
+        p Content: #{post.content}
+        if post.tags
+          p Tags: #{post.tags}
+        else
+          p No tag available
+    else
+      p Post not found

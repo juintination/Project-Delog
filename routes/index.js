@@ -55,6 +55,28 @@ module.exports = (app, passport) => {
     }
   })
 
+  // get post
+  app.get("/get_post/:profileId/:categoryId/:postId", async (req, res) => {
+    const profileId = parseInt(req.params.profileId)
+    const profile = await axios.get(
+      `http://localhost:8080/profile/${profileId}`
+    )
+
+    const categoryId = parseInt(req.params.categoryId)
+    const category = await axios.get(
+      `http://localhost:8080/category/${categoryId}`
+    )
+
+    const postId = parseInt(req.params.postId)
+    const post = await axios.get(`http://localhost:8080/post/${postId}`)
+
+    res.render("get_post", {
+      profile: profile.data,
+      category: category.data,
+      post: post.data,
+    })
+  })
+
   // login
   app.get("/login", (req, res) => {
     res.render("login", {
