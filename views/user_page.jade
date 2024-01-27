@@ -5,6 +5,12 @@ html(lang='en')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     link(rel="stylesheet", href="/stylesheets/style.css")
     title User Page
+    script.
+      function confirmWithdrawal() {
+        if (confirm("진짜 회원 탈퇴를 진행하시겠습니까?")) {
+          location.href = '/withdrawal';
+        }
+      }
   body
     p #{user.name}님 안녕하세요!
     p Nickname: #{profile.nickname}
@@ -15,3 +21,4 @@ html(lang='en')
     p Profile Bio: #{profile.bio}
     button(type='button', onclick="location.href='/logout'") Log Out
     button(type='button', onclick="location.href='/update_profile'") Update Profile
+    button(type='button', onclick="confirmWithdrawal()") Withdrawal

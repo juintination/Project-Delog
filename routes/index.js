@@ -107,4 +107,13 @@ module.exports = (app, passport) => {
     }
     res.redirect("/")
   })
+
+  // withdrawal
+  app.get("/withdrawal", async (req, res) => {
+    req.session.destroy()
+    const user = req.user
+    console.log(user)
+    await axios.delete(`http://localhost:8080/user/delete/${user.id}`)
+    res.redirect("/")
+  })
 }

@@ -64,8 +64,12 @@ const updateUser = async (userId, userData) => {
 // 유저 삭제(DELETE)
 const deleteUser = async (userId) => {
   try {
+    const users = await prisma.user.findMany({ where: { id: userId } })
+    if (users.length) {
+      var user = users[0]
+    }
     await prisma.profile.delete({
-      where: { id: userId },
+      where: { id: user.profile_id },
     })
   } catch (err) {
     console.error("Error in deleteUser: ", err.stack)
