@@ -28,7 +28,7 @@ const getUserByEmail = async (userEmail) => {
 // 새로운 유저 추가(CREATE)
 const createUser = async (userData) => {
   try {
-    userProfile = await prisma.profile.create({
+    var userProfile = await prisma.profile.create({
       data: { nickname: userData.name },
     })
   } catch (err) {
@@ -39,9 +39,14 @@ const createUser = async (userData) => {
   try {
     userData.birth = new Date(userData.birth)
     userData.profile_id = userProfile.id
-    return await prisma.user.create({
+    var user = await prisma.user.create({
       data: userData,
     })
+
+    defaultCategory = await prisma.category.create({
+      data: { name: "전체", user_id: user.id },
+    })
+    return user
   } catch (err) {
     console.error("Error in createUser: ", err.stack)
     throw new Error("Failed to create user")
