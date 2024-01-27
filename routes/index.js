@@ -27,7 +27,29 @@ module.exports = (app, passport) => {
       const profile = await axios.get(
         `http://localhost:8080/profile/${user.profile_id}`
       )
-      res.render("user_page", { user: user, profile: profile.data })
+
+      const categories = await axios.get(
+        `http://localhost:8080/category/all/${user.id}`
+      )
+
+      var posts = []
+      await Promise.all(
+        categories.data.map(async (category) => {
+          const response = await axios.get(
+            `http://localhost:8080/post/all/${category.id}`
+          )
+          response.data.forEach((post) => {
+            posts.push(post)
+          })
+        })
+      )
+
+      res.render("user_page", {
+        user: user,
+        profile: profile.data,
+        categories: categories.data,
+        posts: posts,
+      })
     }
   })
 
@@ -80,7 +102,6 @@ module.exports = (app, passport) => {
 
   app.post("/update_profile", upload.single("pic"), async (req, res) => {
     const updatedProfile = req.body
-    console.log(req.file)
 
     let picBase64 = null
     if (req.file) {
@@ -112,7 +133,6 @@ module.exports = (app, passport) => {
   app.get("/withdrawal", async (req, res) => {
     req.session.destroy()
     const user = req.user
-    console.log(user)
     await axios.delete(`http://localhost:8080/user/delete/${user.id}`)
     res.redirect("/")
   })
