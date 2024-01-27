@@ -17,41 +17,6 @@ model Category {
   @@index([user_id], map: "user_id")
 }
 
-model User {
-  id         Int        @id @default(autoincrement())
-  name       String     @db.VarChar(20)
-  birth      DateTime   @db.Date
-  email      String     @db.VarChar(20)
-  pwd        String     @db.VarChar(20)
-  is_admin   Int        @default(0) @db.TinyInt
-  profile_id Int
-  Category   Category[]
-  Comment    Comment[]  @ignore
-
-  @@index([profile_id], map: "profile_id")
-}
-
-model Profile {
-  id       Int     @id @default(autoincrement())
-  pic      Bytes?  @db.MediumBlob
-  bio      String? @db.Text
-  nickname String? @db.VarChar(20)
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model Comment {
-  content    String    @db.Text
-  created_at DateTime? @default(now()) @db.Timestamp(0)
-  is_secret  Int       @default(0) @db.TinyInt
-  user_id    Int
-  post_id    Int
-  User       User      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comment_ibfk_1")
-
-  @@index([post_id], map: "post_id")
-  @@index([user_id], map: "user_id")
-  @@ignore
-}
-
 model Post {
   id          Int       @id @default(autoincrement())
   title       String    @db.VarChar(20)
@@ -61,6 +26,42 @@ model Post {
   category_id Int
   tags        Json?
   Category    Category  @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "post_ibfk_2")
+  comment     comment[]
 
   @@index([category_id], map: "category_id")
+}
+
+model Profile {
+  id       Int     @id @default(autoincrement())
+  pic      Bytes?  @db.MediumBlob
+  bio      String? @db.Text
+  nickname String? @db.VarChar(20)
+}
+
+model User {
+  id         Int        @id @default(autoincrement())
+  name       String     @db.VarChar(20)
+  birth      DateTime   @db.Date
+  email      String     @db.VarChar(20)
+  pwd        String     @db.VarChar(20)
+  is_admin   Int        @default(0) @db.TinyInt
+  profile_id Int
+  Category   Category[]
+  comment    comment[]
+
+  @@index([profile_id], map: "profile_id")
+}
+
+model comment {
+  id         Int      @id @default(autoincrement())
+  content    String   @db.Text
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  is_secret  Boolean  @default(false)
+  user_id    Int
+  post_id    Int
+  User       User     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comment_ibfk_1")
+  Post       Post     @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comment_ibfk_2")
+
+  @@index([post_id], map: "post_id")
+  @@index([user_id], map: "user_id")
 }
