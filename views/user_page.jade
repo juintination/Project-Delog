@@ -19,20 +19,25 @@ html(lang='en')
     else
       p No profile picture available
     p Profile Bio: #{profile.bio}
+    
     p All Categories
     if categories.length > 0
       ul
         each category in categories
-          li= category.name
+          li
+            a(href=`/get_category/${category.id}`) #{category.name}
     else
       p No category available
+
     p All Posts
     if posts.length > 0
       ul
         each post in posts
-          a(href=`/get_post/${profile.id}/${post.category_id}/${post.id}`) #{post.title}
+          li
+            a(href=`/get_post/${profile.id}/${post.category_id}/${post.id}`) #{post.title}
     else
       p No post available
+
     button(type='button', onclick="location.href='/logout'") Log Out
     button(type='button', onclick="location.href='/update_profile'") Update Profile
     button(type='button', onclick="confirmWithdrawal()") Withdrawal

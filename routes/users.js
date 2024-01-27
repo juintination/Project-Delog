@@ -3,6 +3,7 @@ const router = express.Router()
 
 const {
   getAllUsers,
+  getUserById,
   getUserByEmail,
   createUser,
   updateUser,
@@ -21,7 +22,20 @@ router.get("/all", async (req, res) => {
   }
 })
 
-// 특정 유저 조회(READ)
+// id로 특정 유저 조회(READ)
+router.get("/id/:userId", async (req, res) => {
+  try {
+    const userId = parseInt(req.params.userId)
+    const user = await getUserById(userId)
+    res.status(200).json(user)
+  } catch (err) {
+    console.error("Error in getUserById route: ", err.stack)
+    res.status(500).json({ error: "Internal Server Error" })
+    throw new Error("Failed to get user by Id")
+  }
+})
+
+// 이메일로 특정 유저 조회(READ)
 router.get("/:userEmail", async (req, res) => {
   try {
     const userEmail = req.params.userEmail

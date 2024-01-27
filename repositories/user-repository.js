@@ -11,7 +11,21 @@ const getAllUsers = async () => {
   }
 }
 
-// 특정 유저 조회(READ)
+// id로 특정 유저 조회(READ)
+const getUserById = async (userId) => {
+  try {
+    const users = await prisma.user.findMany({ where: { id: userId } })
+    if (users.length) {
+      const user = users[0]
+      return user
+    }
+  } catch (err) {
+    console.error("Error in getUserById: ", err.stack)
+    throw new Error("Failed to get user by Id")
+  }
+}
+
+// 이메일로 특정 유저 조회(READ)
 const getUserByEmail = async (userEmail) => {
   try {
     const users = await prisma.user.findMany({ where: { email: userEmail } })
@@ -93,6 +107,7 @@ const deleteUser = async (userId) => {
 
 module.exports = {
   getAllUsers,
+  getUserById,
   getUserByEmail,
   createUser,
   updateUser,
