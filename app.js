@@ -47,6 +47,9 @@ app.use("/user", userRouter)
 const profileRouter = require("./routes/profiles")
 app.use("/profile", profileRouter)
 
+const categoryRouter = require("./routes/categories")
+app.use("/category", categoryRouter)
+
 app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "jade")
 
