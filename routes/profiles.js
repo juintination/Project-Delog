@@ -37,7 +37,8 @@ router.get("/:profileId", async (req, res) => {
 // 새로운 프로필 추가(CREATE)
 router.post("/create", async (req, res) => {
   try {
-    const profile = await createProfile()
+    const profileData = req.body
+    const profile = await createProfile(profileData)
     res.status(200).json(profile)
   } catch (err) {
     console.error("Error in createProfile route: ", err.stack)
@@ -51,6 +52,7 @@ router.put("/update/:profileId", async (req, res) => {
   try {
     const profileId = parseInt(req.params.profileId)
     const profileData = req.body
+    console.log(profileData)
     const updatedProfile = await updateProfile(profileId, profileData)
     res.status(200).json(updatedProfile)
   } catch (err) {

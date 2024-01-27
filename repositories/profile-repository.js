@@ -26,9 +26,11 @@ const getProfileByProfileId = async (profileId) => {
 }
 
 // 새로운 프로필 추가(CREATE)
-const createProfile = async () => {
+const createProfile = async (profileData) => {
   try {
-    return await prisma.profile.create()
+    return await prisma.profile.create({
+      data: profileData,
+    })
   } catch (err) {
     console.error("Error in createProfile: ", err.stack)
     throw new Error("Failed to create profile")

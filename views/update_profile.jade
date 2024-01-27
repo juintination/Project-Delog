@@ -1,0 +1,18 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(rel="stylesheet", href="/stylesheets/style.css")
+    title Update User
+  body
+    h1 Update #{user.name}'s Profile
+    form(action='/update_profile', method='POST')
+      input(type='hidden', name='id', value=profile.id)
+      label(for='nickname') Nickname:
+      input(type='text', id='nickname', name='nickname', value=profile.nickname)
+      br
+      label(for='bio') Bio:
+      input(type='text', id='bio', name='bio', value=profile.bio)
+      br
+      input(type='submit', value='Update')

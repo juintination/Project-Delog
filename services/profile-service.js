@@ -21,9 +21,9 @@ async function getProfileByProfileId(profileId) {
 }
 
 // 새로운 프로필 추가(CREATE)
-async function createProfile() {
+async function createProfile(profileData) {
   try {
-    return await profileRepository.createProfile()
+    return await profileRepository.createProfile(profileData)
   } catch (err) {
     console.error("Error in createProfile: ", err.stack)
     throw new Error("Failed to create profile")

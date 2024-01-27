@@ -28,7 +28,9 @@ const getUserByEmail = async (userEmail) => {
 // 새로운 유저 추가(CREATE)
 const createUser = async (userData) => {
   try {
-    userProfile = await prisma.profile.create()
+    userProfile = await prisma.profile.create({
+      data: { nickname: userData.name },
+    })
   } catch (err) {
     console.error("Error in createUser: ", err.stack)
     throw new Error("Failed to create profile")
