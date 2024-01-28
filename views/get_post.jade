@@ -24,7 +24,10 @@ html(lang='en')
         ul
           each comment in comments
             li
-              p Author: #{comment.author}, Created At: #{comment.created_at}, Content: #{comment.content}
+              if !comment.is_secret || (comment.is_secret && isOwner) || (visitor && (comment.user_id == visitor.id))
+                p Author: #{comment.author}, Created At: #{comment.created_at}, Content: #{comment.content}
+              else
+                p This Comment is Secret
       else
         p No comments available
     else

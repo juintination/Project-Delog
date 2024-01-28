@@ -74,6 +74,16 @@ module.exports = (app, passport) => {
   // get post
   app.get("/get_post/:profileId/:categoryId/:postId", async (req, res) => {
     const profileId = parseInt(req.params.profileId)
+
+    var isOwner = false
+    var visitor = null
+    if (req.user) {
+      visitor = req.user
+      if (visitor.profile_id === profileId) {
+        isOwner = true
+      }
+    }
+
     const profile = await axios.get(
       `http://localhost:8080/profile/${profileId}`
     )
@@ -109,6 +119,8 @@ module.exports = (app, passport) => {
       category: category.data,
       post: post.data,
       comments: comments.data,
+      isOwner: isOwner,
+      visitor: visitor,
     })
   })
 
