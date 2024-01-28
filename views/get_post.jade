@@ -5,6 +5,25 @@ html(lang='en')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     link(rel="stylesheet", href="/stylesheets/style.css")
     title Post Details
+    script.
+      function confirmDelete(commentId) {
+        if (confirm("진짜로 이 댓글을 삭제하시겠습니까?")) {
+          fetch('/comment/delete/' + commentId, {
+            method: 'DELETE'
+          })
+          .then(response => {
+            if (response.ok) {
+              location.reload(); // 댓글이 성공적으로 삭제된 경우
+            } else {
+              alert('댓글 삭제에 실패했습니다.'); // 댓글 삭제에 실패한 경우
+            }
+          })
+          .catch(error => {
+            console.error('댓글 삭제 중 오류 발생:', error);
+            alert('댓글 삭제 중 오류가 발생했습니다.');
+          });
+        }
+      }
   body
     h1 Post Details
     if post
@@ -26,6 +45,8 @@ html(lang='en')
             li
               if !comment.is_secret || (comment.is_secret && isOwner) || (visitor && (comment.user_id == visitor.id))
                 p Author: #{comment.author}, Created At: #{comment.created_at}, Content: #{comment.content}
+                if visitor && (comment.user_id == visitor.id)
+                  a(href=`#`, onclick=`confirmDelete('${comment.id}')`) Delete
               else
                 p This Comment is Secret
       else
