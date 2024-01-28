@@ -24,6 +24,54 @@ html(lang='en')
           });
         }
       }
+
+      function editComment(commentId) {
+        // 해당 댓글의 내용을 수정할 수 있는 입력 필드 보이기
+        const commentContent = document.getElementById(`commentContent${commentId}`);
+        const editForm = document.getElementById(`editForm${commentId}`);
+        const editContent = document.getElementById(`editContent${commentId}`);
+
+        // 현재 댓글 내용을 입력 필드에 설정
+        editContent.value = commentContent.textContent;
+
+        // 댓글 내용 보이는 영역 숨기고 수정 폼 보이기
+        commentContent.style.display = 'none';
+        editForm.style.display = 'block';
+      }
+
+      function saveComment(commentId) {
+        const editedContent = document.getElementById(`editContent${commentId}`).value;
+        const updatedComment = {
+          content: editedContent
+        };
+
+        // AJAX 요청
+        fetch(`/comment/update/${commentId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(updatedComment)
+        })
+        .then(response => {
+          if (response.ok) {
+            window.location.reload(); // 댓글이 성공적으로 수정된 경우
+          } else {
+            alert('댓글 수정에 실패했습니다.'); // 댓글 수정에 실패한 경우
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+      }
+
+      function cancelEdit(commentId) {
+        const editForm = document.getElementById(`editForm${commentId}`);
+        const commentContent = document.getElementById(`commentContent${commentId}`);
+        editForm.style.display = 'none';
+        commentContent.style.display = 'block';
+      }
+
   body
     h1 Post Details
     if post
@@ -44,11 +92,21 @@ html(lang='en')
           each comment in comments
             li
               if !comment.is_secret || (comment.is_secret && isOwner) || (visitor && (comment.user_id == visitor.id))
-                p Author: #{comment.author}, Created At: #{comment.created_at}, Content: #{comment.content}
-                if visitor && (comment.user_id == visitor.id)
-                  a(href=`#`, onclick=`confirmDelete('${comment.id}')`) Delete
+                p Author: #{comment.author}, Created At: #{comment.created_at}
+                p Content:
+                  span(id=`commentContent${comment.id}`) #{comment.content}
+                  if visitor && comment.user_id === visitor.id
+                    a(href=`#`, onclick=`editComment('${comment.id}')`) Edit
+                    a(href=`#`, onclick=`confirmDelete('${comment.id}')`) Delete
               else
                 p This Comment is Secret
+
+              // Edit Comment form
+              form(id=`editForm${comment.id}`, style='display: none;')
+                input(type='hidden', name='commentId', value=comment.id)
+                textarea(id=`editContent${comment.id}`, name='content') #{comment.content}
+                button(type='button', onclick=`saveComment('${comment.id}')`) Save
+                button(type='button', onclick=`cancelEdit('${comment.id}')`) Cancel
       else
         p No comments available
 
