@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient()
 
 // 전체 댓글 조회(READ)
-const getAllComments = async (userId) => {
+const getAllUsersComments = async (userId) => {
   try {
     const comments = await prisma.comment.findMany({
       where: { user_id: userId },
@@ -11,12 +11,27 @@ const getAllComments = async (userId) => {
       return comments
     }
   } catch (err) {
-    console.error("Error in getAllComments: ", err.stack)
+    console.error("Error in getAllUsersComments: ", err.stack)
     throw new Error("Failed to get all comments")
   }
 }
 
-// 특정 게시글에 대한 댓글 조회(READ)
+// 특정 게시글에 대한 전체 댓글 조회(READ)
+const getAllPostsComments = async (userId) => {
+  try {
+    const comments = await prisma.comment.findMany({
+      where: { user_id: userId },
+    })
+    if (comments.length) {
+      return comments
+    }
+  } catch (err) {
+    console.error("Error in getAllPostsComments: ", err.stack)
+    throw new Error("Failed to get all comments")
+  }
+}
+
+// 유저의 특정 게시글에 대한 댓글 조회(READ)
 const getCommentsByIds = async (userId, postId) => {
   try {
     const comments = await prisma.comment.findMany({
@@ -85,7 +100,8 @@ const deleteComment = async (commentId) => {
 }
 
 module.exports = {
-  getAllComments,
+  getAllUsersComments,
+  getAllPostsComments,
   getCommentsByIds,
   getCommentByCommentId,
   createComment,

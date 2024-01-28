@@ -70,10 +70,29 @@ module.exports = (app, passport) => {
     const postId = parseInt(req.params.postId)
     const post = await axios.get(`http://localhost:8080/post/${postId}`)
 
+    const comments = await axios.get(
+      `http://localhost:8080/comment/all/post/${postId}`
+    )
+
+    if (comments.data) {
+      await Promise.all(
+        comments.data.map(async (comment) => {
+          const author = await axios.get(
+            `http://localhost:8080/user/id/${comment.user_id}`
+          )
+          const profile = await axios.get(
+            `http://localhost:8080/profile/${author.data.profile_id}`
+          )
+          comment.author = profile.data.nickname
+        })
+      )
+    }
+
     res.render("get_post", {
       profile: profile.data,
       category: category.data,
       post: post.data,
+      comments: comments.data,
     })
   })
 

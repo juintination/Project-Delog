@@ -2,7 +2,8 @@ const express = require("express")
 const router = express.Router()
 
 const {
-  getAllComments,
+  getAllUsersComments,
+  getAllPostsComments,
   getCommentsByIds,
   getCommentByCommentId,
   createComment,
@@ -11,19 +12,32 @@ const {
 } = require("../services/comment-service")
 
 // 전체 댓글 조회(READ)
-router.get("/all/:userId", async (req, res) => {
+router.get("/all/user/:userId", async (req, res) => {
   try {
     const userId = parseInt(req.params.userId)
-    const categories = await getAllComments(userId)
+    const categories = await getAllUsersComments(userId)
     res.status(200).json(categories)
   } catch (err) {
-    console.error("Error in getAllComments route: ", err.stack)
+    console.error("Error in getAllUsersComments route: ", err.stack)
     res.status(500).json({ error: "Internal Server Error" })
     throw new Error("Failed to get all categories")
   }
 })
 
-// 특정 게시글에 대한 댓글 조회(READ)
+// 특정 게시글에 대한 전체 댓글 조회(READ)
+router.get("/all/post/:postId", async (req, res) => {
+  try {
+    const postId = parseInt(req.params.postId)
+    const categories = await getAllPostsComments(postId)
+    res.status(200).json(categories)
+  } catch (err) {
+    console.error("Error in getAllPostsComments route: ", err.stack)
+    res.status(500).json({ error: "Internal Server Error" })
+    throw new Error("Failed to get all categories")
+  }
+})
+
+// 유저의 특정 게시글에 대한 댓글 조회(READ)
 router.get("/all/:userId/:postId", async (req, res) => {
   try {
     const userId = parseInt(req.params.userId)

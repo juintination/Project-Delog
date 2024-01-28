@@ -1,16 +1,26 @@
 const commentRepository = require("../repositories/comment-repository")
 
 // 전체 댓글 조회(READ)
-async function getAllComments(userId) {
+async function getAllUsersComments(userId) {
   try {
-    return await commentRepository.getAllComments(userId)
+    return await commentRepository.getAllUsersComments(userId)
   } catch (err) {
-    console.error("Error in getAllComments: ", err.stack)
+    console.error("Error in getAllUsersComments: ", err.stack)
     throw new Error("Failed to get all comments")
   }
 }
 
-// 특정 게시글에 대한 댓글 조회(READ)
+// 특정 게시글에 대한 전체 댓글 조회(READ)
+async function getAllPostsComments(userId) {
+  try {
+    return await commentRepository.getAllPostsComments(userId)
+  } catch (err) {
+    console.error("Error in getAllPostsComments: ", err.stack)
+    throw new Error("Failed to get all comments")
+  }
+}
+
+// 유저의 특정 게시글에 대한 댓글 조회(READ)
 async function getCommentsByIds(userId, postId) {
   try {
     return await commentRepository.getCommentsByIds(userId, postId)
@@ -62,7 +72,8 @@ async function deleteComment(commentId) {
 
 // 외부에서 직접 호출할 수 있도록 함수들을 export
 module.exports = {
-  getAllComments,
+  getAllUsersComments,
+  getAllPostsComments,
   getCommentsByIds,
   getCommentByCommentId,
   createComment,

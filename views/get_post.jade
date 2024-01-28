@@ -18,5 +18,14 @@ html(lang='en')
           p Tags: #{post.tags}
         else
           p No tag available
+
+      if comments.length > 0
+        h2 Comments
+        ul
+          each comment in comments
+            li
+              p Author: #{comment.author}, Created At: #{comment.created_at}, Content: #{comment.content}
+      else
+        p No comments available
     else
       p Post not found
