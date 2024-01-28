@@ -17,10 +17,10 @@ const getAllUsersComments = async (userId) => {
 }
 
 // 특정 게시글에 대한 전체 댓글 조회(READ)
-const getAllPostsComments = async (userId) => {
+const getAllPostsComments = async (postId) => {
   try {
     const comments = await prisma.comment.findMany({
-      where: { user_id: userId },
+      where: { post_id: postId },
     })
     if (comments.length) {
       return comments

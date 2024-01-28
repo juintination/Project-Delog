@@ -11,9 +11,9 @@ async function getAllUsersComments(userId) {
 }
 
 // 특정 게시글에 대한 전체 댓글 조회(READ)
-async function getAllPostsComments(userId) {
+async function getAllPostsComments(postId) {
   try {
-    return await commentRepository.getAllPostsComments(userId)
+    return await commentRepository.getAllPostsComments(postId)
   } catch (err) {
     console.error("Error in getAllPostsComments: ", err.stack)
     throw new Error("Failed to get all comments")
