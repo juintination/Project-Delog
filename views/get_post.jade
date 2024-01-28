@@ -30,5 +30,34 @@ html(lang='en')
                 p This Comment is Secret
       else
         p No comments available
+
+      if visitor
+        form(action='/add_comment', method='POST')
+          input(type='hidden', name='postId', value=post.id)
+          input(type='hidden', name='categoryId', value=category.id)
+          label(for='content') Add Comment:
+          textarea(id='content', name='content')
+          label(for='isSecret') is Secret?:
+          button(type='button', id='toggleButton', class='toggle-button') Public
+          input(type='hidden', id='isSecret', name='isSecret', value='0')
+          input(type='submit', value='Add Comment')
+      else
+        p Login to add comments
     else
       p Post not found
+
+  script.
+    const toggleButton = document.getElementById('toggleButton');
+    const isSecretInput = document.getElementById('isSecret');
+
+    toggleButton.addEventListener('click', function() {
+      if (toggleButton.classList.contains('active')) {
+        toggleButton.textContent = 'Public';
+        toggleButton.classList.remove('active');
+        isSecretInput.value = '0'; // Public
+      } else {
+        toggleButton.textContent = 'Secret';
+        toggleButton.classList.add('active');
+        isSecretInput.value = '1'; // Secret
+      }
+    });

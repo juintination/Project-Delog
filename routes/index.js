@@ -150,6 +150,21 @@ module.exports = (app, passport) => {
     })
   })
 
+  // add comment
+  app.post("/add_comment", async (req, res) => {
+    const commentData = {
+      user_id: parseInt(req.user.id),
+      post_id: parseInt(req.body.postId),
+      content: req.body.content,
+      is_secret: req.body.isSecret === "1" ? true : false,
+    }
+    await axios.post(`http://localhost:8080/comment/create/`, commentData)
+
+    const profileId = parseInt(req.user.profile_id)
+    const categoryId = parseInt(req.body.categoryId)
+    res.redirect(`/get_post/${profileId}/${categoryId}/${commentData.post_id}`)
+  })
+
   // login
   app.get("/login", (req, res) => {
     res.render("login", {
