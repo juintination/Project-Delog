@@ -24,35 +24,51 @@ module.exports = (app, passport) => {
       res.render("index", { title: "Welcome page" })
     } else {
       const user = req.user
-      const profile = await axios.get(
-        `http://localhost:8080/profile/${user.profile_id}`
-      )
-
-      const categories = await axios.get(
-        `http://localhost:8080/category/all/${user.id}`
-      )
-
-      var posts = []
-      await Promise.all(
-        categories.data.map(async (category) => {
-          const response = await axios.get(
-            `http://localhost:8080/post/all/${category.id}`
-          )
-          if (response.data) {
-            response.data.forEach((post) => {
-              posts.push(post)
-            })
-          }
-        })
-      )
-
-      res.render("user_page", {
-        user: user,
-        profile: profile.data,
-        categories: categories.data,
-        posts: posts,
-      })
+      res.redirect(`/delog/${user.id}`)
     }
+  })
+
+  // user page
+  app.get("/delog/:userId", async (req, res) => {
+    const userId = parseInt(req.params.userId)
+    var isOwner = false
+    if (req.user) {
+      if (req.user.id === userId) {
+        isOwner = true
+      }
+    }
+
+    const user = await axios.get(`http://localhost:8080/user/id/${userId}`)
+
+    const profile = await axios.get(
+      `http://localhost:8080/profile/${user.data.profile_id}`
+    )
+
+    const categories = await axios.get(
+      `http://localhost:8080/category/all/${user.data.id}`
+    )
+
+    var posts = []
+    await Promise.all(
+      categories.data.map(async (category) => {
+        const response = await axios.get(
+          `http://localhost:8080/post/all/${category.id}`
+        )
+        if (response.data) {
+          response.data.forEach((post) => {
+            posts.push(post)
+          })
+        }
+      })
+    )
+
+    res.render("user_page", {
+      user: user.data,
+      profile: profile.data,
+      categories: categories.data,
+      posts: posts,
+      isOwner: isOwner,
+    })
   })
 
   // get post

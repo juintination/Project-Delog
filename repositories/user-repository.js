@@ -83,6 +83,12 @@ const updateUser = async (userId, userData) => {
 // 유저 삭제(DELETE)
 const deleteUser = async (userId) => {
   try {
+    await prisma.comment.deleteMany({
+      where: { user_id: userId },
+    })
+    await prisma.category.deleteMany({
+      where: { user_id: userId },
+    })
     const users = await prisma.user.findMany({ where: { id: userId } })
     if (users.length) {
       var user = users[0]

@@ -4,7 +4,13 @@ html(lang='en')
     meta(charset='UTF-8')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     link(rel="stylesheet", href="/stylesheets/style.css")
-    title Update User
+    title Update Profile
+    script.
+      function confirmWithdrawal() {
+        if (confirm("진짜 회원 탈퇴를 진행하시겠습니까?")) {
+          location.href = '/withdrawal';
+        }
+      }
   body
     h1 Update #{user.name}'s Profile
     form(action='/update_profile', method='POST', enctype='multipart/form-data')
@@ -19,4 +25,5 @@ html(lang='en')
       input(type='text', id='bio', name='bio', value=profile.bio)
       br
       input(type='submit', value='Update')
+      button(type='button', onclick="confirmWithdrawal()") Withdrawal
       
