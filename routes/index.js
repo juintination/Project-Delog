@@ -163,6 +163,12 @@ module.exports = (app, passport) => {
     })
   })
 
+  // create post
+  app.post("/create_post", async (req, res) => {
+    const categoryId = parseInt(req.body.categoryId)
+    res.render("create_post", { categoryId: categoryId })
+  })
+
   // add comment
   app.post("/add_comment", async (req, res) => {
     const commentData = {

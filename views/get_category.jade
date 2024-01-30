@@ -11,3 +11,7 @@ html(lang='en')
       each post in posts
         li
           a(href=`/get_post/${profile.id}/${post.category_id}/${post.id}`) #{post.title}
+    if isOwner
+      form(action='/create_post', method='POST')
+        input(type='hidden', name='categoryId', value=category.id)
+        button(type='submit') Create New Post
