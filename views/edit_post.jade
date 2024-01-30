@@ -1,0 +1,88 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(rel="stylesheet", href="/stylesheets/style.css")
+    title Edit Post
+    script.
+      function confirmUpdate() {
+        if (confirm("포스트를 업데이트 하시겠습니까?")) {
+          const postId = document.getElementById('postId').value;
+          const updatedTitle = document.getElementById('title').value;
+          const updatedContent = document.getElementById('content').value;
+          const updatedTags = [];
+          document.querySelectorAll('.tag-input').forEach(input => {
+            if (input.value.trim() !== '') {
+              updatedTags.push(input.value.trim());
+            }
+          });
+
+          fetch(`/post/update/${postId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              title: updatedTitle,
+              content: updatedContent,
+              tags: updatedTags
+            })
+          })
+          .then(response => {
+            if (response.ok) {
+              alert('포스트가 성공적으로 업데이트되었습니다.');
+              location.href = '/'; // 업데이트 후 홈페이지로 이동
+            }
+          })
+          .catch(error => {
+            console.error('포스트 업데이트 중 오류 발생:', error);
+            alert('포스트 업데이트 중 오류가 발생했습니다.');
+          });
+        }
+      }
+      function addTagInput() {
+        const tagContainer = document.getElementById('tag-container');
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.classList.add('tag-input');
+        input.placeholder = 'Enter tag';
+        tagContainer.appendChild(input);
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'X';
+        removeButton.classList.add('remove-tag');
+        removeButton.onclick = function() {
+          tagContainer.removeChild(input);
+          tagContainer.removeChild(removeButton);
+        };
+        tagContainer.appendChild(removeButton);
+      }
+      function confirmCancel() {
+        if (confirm("작성 중인 내용이 삭제됩니다. 정말 취소하시겠습니까?")) {
+          location.href = '/';
+        }
+      }
+  body
+    h1 Edit Post
+    if post
+      form(onsubmit="confirmUpdate(); return false;")
+        input(type='hidden', id='postId', name='postId', value=post.id)
+        label(for='title') Title:
+        input(type='text', id='title', name='title', value=post.title, required)
+        label(for='content') Content:
+        textarea(id='content', name='content', required)= post.content
+        div#tag-container
+          each tag in post.tags
+            div
+              input(type='text', class='tag-input', value=tag)
+              button(type='button', onclick="removeTag(this)") X
+        button(type='button', onclick="addTagInput()") Add Tag
+        button(type='submit') Save
+        button(type='button', onclick="confirmCancel()") Cancel
+    else
+      p Post not found
+  script.
+    function removeTag(button) {
+      const container = button.parentElement;
+      container.parentElement.removeChild(container);
+    }

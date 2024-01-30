@@ -169,6 +169,15 @@ module.exports = (app, passport) => {
     res.render("create_post", { categoryId: categoryId })
   })
 
+  // edit post
+  app.post("/edit_post", async (req, res) => {
+    const postId = parseInt(req.body.postId)
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+    })
+    res.render("edit_post", { post: post })
+  })
+
   // add comment
   app.post("/add_comment", async (req, res) => {
     const commentData = {
