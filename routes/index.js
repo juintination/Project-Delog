@@ -1,7 +1,9 @@
-const axios = require("axios")
 const multer = require("multer")
 const path = require("path")
 const fs = require("fs")
+
+const { PrismaClient } = require("@prisma/client")
+const prisma = new PrismaClient()
 
 // 파일 저장 경로와 파일 이름 설정
 const storage = multer.diskStorage({
@@ -38,24 +40,24 @@ module.exports = (app, passport) => {
       }
     }
 
-    const user = await axios.get(`http://localhost:8080/user/id/${userId}`)
+    const user = await prisma.user.findUnique({ where: { id: userId } })
 
-    const profile = await axios.get(
-      `http://localhost:8080/profile/${user.data.profile_id}`
-    )
+    const profile = await prisma.profile.findUnique({
+      where: { id: user.profile_id },
+    })
 
-    const categories = await axios.get(
-      `http://localhost:8080/category/all/${user.data.id}`
-    )
+    const categories = await prisma.category.findMany({
+      where: { user_id: userId },
+    })
 
     var posts = []
     await Promise.all(
-      categories.data.map(async (category) => {
-        const response = await axios.get(
-          `http://localhost:8080/post/all/${category.id}`
-        )
-        if (response.data) {
-          response.data.forEach((post) => {
+      categories.map(async (category) => {
+        const response = await prisma.post.findMany({
+          where: { category_id: category.id },
+        })
+        if (response.length) {
+          response.forEach((post) => {
             posts.push(post)
           })
         }
@@ -63,9 +65,9 @@ module.exports = (app, passport) => {
     )
 
     res.render("user_page", {
-      user: user.data,
-      profile: profile.data,
-      categories: categories.data,
+      user: user,
+      profile: profile,
+      categories: categories,
       posts: posts,
       isOwner: isOwner,
     })
@@ -84,41 +86,44 @@ module.exports = (app, passport) => {
       }
     }
 
-    const profile = await axios.get(
-      `http://localhost:8080/profile/${profileId}`
-    )
+    const profile = await prisma.profile.findUnique({
+      where: { id: profileId },
+    })
 
     const categoryId = parseInt(req.params.categoryId)
-    const category = await axios.get(
-      `http://localhost:8080/category/${categoryId}`
-    )
+    const category = await prisma.category.findUnique({
+      where: { id: categoryId },
+    })
 
     const postId = parseInt(req.params.postId)
-    const post = await axios.get(`http://localhost:8080/post/${postId}`)
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+    })
 
-    const comments = await axios.get(
-      `http://localhost:8080/comment/all/post/${postId}`
-    )
+    const comments = await prisma.comment.findMany({
+      where: { post_id: postId },
+    })
 
-    if (comments.data) {
+    if (comments) {
       await Promise.all(
-        comments.data.map(async (comment) => {
-          const author = await axios.get(
-            `http://localhost:8080/user/id/${comment.user_id}`
-          )
-          const profile = await axios.get(
-            `http://localhost:8080/profile/${author.data.profile_id}`
-          )
-          comment.author = profile.data.nickname
+        comments.map(async (comment) => {
+          const author = await prisma.user.findUnique({
+            where: { id: comment.user_id },
+          })
+
+          const profile = await prisma.profile.findUnique({
+            where: { id: author.profile_id },
+          })
+          comment.author = profile.nickname
         })
       )
     }
 
     res.render("get_post", {
-      profile: profile.data,
-      category: category.data,
-      post: post.data,
-      comments: comments.data,
+      profile: profile,
+      category: category,
+      post: post,
+      comments: comments,
       isOwner: isOwner,
       visitor: visitor,
     })
@@ -127,26 +132,34 @@ module.exports = (app, passport) => {
   // get category
   app.get("/get_category/:categoryId", async (req, res) => {
     const categoryId = parseInt(req.params.categoryId)
-    const category = await axios.get(
-      `http://localhost:8080/category/${categoryId}`
-    )
+    const category = await prisma.category.findUnique({
+      where: { id: categoryId },
+    })
 
-    const user = await axios.get(
-      `http://localhost:8080/user/id/${category.data.user_id}`
-    )
+    const user = await prisma.user.findUnique({
+      where: { id: category.user_id },
+    })
 
-    const profile = await axios.get(
-      `http://localhost:8080/profile/${user.data.profile_id}`
-    )
+    var isOwner = false
+    if (req.user) {
+      if (req.user.id === user.id) {
+        isOwner = true
+      }
+    }
 
-    const posts = await axios.get(
-      `http://localhost:8080/post/all/${categoryId}`
-    )
+    const profile = await prisma.profile.findUnique({
+      where: { id: user.profile_id },
+    })
+
+    const posts = await prisma.post.findMany({
+      where: { category_id: categoryId },
+    })
 
     res.render("get_category", {
-      profile: profile.data,
-      category: category.data,
-      posts: posts.data,
+      profile: profile,
+      category: category,
+      posts: posts,
+      isOwner: isOwner,
     })
   })
 
@@ -158,7 +171,9 @@ module.exports = (app, passport) => {
       content: req.body.content,
       is_secret: req.body.isSecret === "1" ? true : false,
     }
-    await axios.post(`http://localhost:8080/comment/create/`, commentData)
+    await prisma.comment.create({
+      data: commentData,
+    })
 
     const profileId = parseInt(req.user.profile_id)
     const categoryId = parseInt(req.body.categoryId)
@@ -206,14 +221,15 @@ module.exports = (app, passport) => {
   // update profile
   app.get("/update_profile", async (req, res) => {
     const user = req.user
-    const profile = await axios.get(
-      `http://localhost:8080/profile/${user.profile_id}`
-    )
-    res.render("update_profile", { user: user, profile: profile.data })
+    const profile = await prisma.profile.findUnique({
+      where: { id: user.profile_id },
+    })
+    res.render("update_profile", { user: user, profile: profile })
   })
 
   app.post("/update_profile", upload.single("pic"), async (req, res) => {
     const updatedProfile = req.body
+    const updatedProfileId = parseInt(updatedProfile.id)
 
     let picBase64 = null
     if (req.file) {
@@ -221,22 +237,22 @@ module.exports = (app, passport) => {
       const picData = fs.readFileSync(req.file.path)
       picBase64 = Buffer.from(picData).toString("base64")
 
-      await axios.put(
-        `http://localhost:8080/profile/update/${updatedProfile.id}`,
-        {
+      await prisma.profile.update({
+        where: { id: updatedProfileId },
+        data: {
           nickname: updatedProfile.nickname,
           pic: picBase64,
           bio: updatedProfile.bio,
-        }
-      )
+        },
+      })
     } else {
-      await axios.put(
-        `http://localhost:8080/profile/update/${updatedProfile.id}`,
-        {
+      await prisma.profile.update({
+        where: { id: updatedProfileId },
+        data: {
           nickname: updatedProfile.nickname,
           bio: updatedProfile.bio,
-        }
-      )
+        },
+      })
     }
     res.redirect("/")
   })
@@ -245,7 +261,18 @@ module.exports = (app, passport) => {
   app.get("/withdrawal", async (req, res) => {
     req.session.destroy()
     const user = req.user
-    await axios.delete(`http://localhost:8080/user/delete/${user.id}`)
+    await prisma.comment.deleteMany({
+      where: { user_id: user.id },
+    })
+    await prisma.category.deleteMany({
+      where: { user_id: user.id },
+    })
+    await prisma.profile.delete({
+      where: { id: user.profile_id },
+    })
+    await prisma.user.delete({
+      where: { id: user.id },
+    })
     res.redirect("/")
   })
 }

@@ -1,5 +1,7 @@
 const LocalStrategy = require("passport-local").Strategy
-const axios = require("axios")
+
+const { PrismaClient } = require("@prisma/client")
+const prisma = new PrismaClient()
 
 module.exports = new LocalStrategy(
   {
@@ -8,11 +10,9 @@ module.exports = new LocalStrategy(
     passReqToCallback: true,
   },
   async (req, email, password, done) => {
-    // HTTP 요청을 통해 사용자 정보를 얻어옴
-    const response = await axios.get(`http://localhost:8080/user/${email}`)
-
-    // 응답에서 필요한 정보를 추출
-    const user = response.data
+    const user = await prisma.user.findFirst({
+      where: { email: email },
+    })
 
     if (email === user.email) {
       if (password === user.pwd) {
