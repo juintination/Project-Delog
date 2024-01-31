@@ -79,6 +79,16 @@ const updateUser = async (userId, userData) => {
 // 유저 삭제(DELETE)
 const deleteUser = async (userId) => {
   try {
+    const user = await prisma.user.findUnique({ where: { id: userId } })
+    await prisma.profile.delete({
+      where: { id: user.profile_id },
+    })
+  } catch (err) {
+    console.error("Error in deleteUser: ", err.stack)
+    throw new Error("Failed to delete profile")
+  }
+
+  try {
     return await prisma.user.delete({
       where: { id: userId },
     })
