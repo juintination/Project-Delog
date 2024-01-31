@@ -6,7 +6,7 @@ async function getAllPosts(categoryId) {
     return await postRepository.getAllPosts(categoryId)
   } catch (err) {
     console.error("Error in getAllPost: ", err.stack)
-    throw new Error("Failed to get all categories")
+    return new Error("Failed to get all categories")
   }
 }
 
@@ -16,7 +16,7 @@ async function getPostById(postId) {
     return await postRepository.getPostById(postId)
   } catch (err) {
     console.error("Error in getPostById: ", err.stack)
-    throw new Error("Failed to get post by postId")
+    return new Error("Failed to get post by postId")
   }
 }
 
@@ -26,7 +26,7 @@ async function createPost(postData) {
     return await postRepository.createPost(postData)
   } catch (err) {
     console.error("Error in createPost: ", err.stack)
-    throw new Error("Failed to create post")
+    return new Error("Failed to create post")
   }
 }
 
@@ -36,7 +36,7 @@ async function updatePost(postId, postData) {
     return await postRepository.updatePost(postId, postData)
   } catch (err) {
     console.error("Error in updatePost: ", err.stack)
-    throw new Error("Failed to update post")
+    return new Error("Failed to update post")
   }
 }
 
@@ -46,7 +46,7 @@ async function deletePost(postId) {
     return await postRepository.deletePost(postId)
   } catch (err) {
     console.error("Error in deletePost: ", err.stack)
-    throw new Error("Failed to delete post")
+    return new Error("Failed to delete post")
   }
 }
 

@@ -6,7 +6,7 @@ async function getAllUsers() {
     return await userRepository.getAllUsers()
   } catch (err) {
     console.error("Error in getAllUsers: ", err.stack)
-    throw new Error("Failed to get all users")
+    return new Error("Failed to get all users")
   }
 }
 
@@ -16,7 +16,7 @@ async function getUserById(userId) {
     return await userRepository.getUserById(userId)
   } catch (err) {
     console.error("Error in getUserById: ", err.stack)
-    throw new Error("Failed to get user by Id")
+    return new Error("Failed to get user by Id")
   }
 }
 
@@ -26,7 +26,7 @@ async function getUserByEmail(userEmail) {
     return await userRepository.getUserByEmail(userEmail)
   } catch (err) {
     console.error("Error in getUserByEmail: ", err.stack)
-    throw new Error("Failed to get user by Email")
+    return new Error("Failed to get user by Email")
   }
 }
 
@@ -36,7 +36,7 @@ async function createUser(userData) {
     return await userRepository.createUser(userData)
   } catch (err) {
     console.error("Error in createUser: ", err.stack)
-    throw new Error("Failed to create user")
+    return new Error("Failed to create user")
   }
 }
 
@@ -46,7 +46,7 @@ async function updateUser(userId, userData) {
     return await userRepository.updateUser(userId, userData)
   } catch (err) {
     console.error("Error in updateUser: ", err.stack)
-    throw new Error("Failed to update user")
+    return new Error("Failed to update user")
   }
 }
 
@@ -56,7 +56,7 @@ async function deleteUser(userId) {
     return await userRepository.deleteUser(userId)
   } catch (err) {
     console.error("Error in deleteUser: ", err.stack)
-    throw new Error("Failed to delete user")
+    return new Error("Failed to delete user")
   }
 }
 

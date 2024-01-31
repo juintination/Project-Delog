@@ -6,7 +6,7 @@ async function getAllCategories(userId) {
     return await categoryRepository.getAllCategories(userId)
   } catch (err) {
     console.error("Error in getAllCategories: ", err.stack)
-    throw new Error("Failed to get all categories")
+    return new Error("Failed to get all categories")
   }
 }
 
@@ -16,7 +16,7 @@ async function getCategoryById(categoryId) {
     return await categoryRepository.getCategoryById(categoryId)
   } catch (err) {
     console.error("Error in getCategoryById: ", err.stack)
-    throw new Error("Failed to get category by categoryId")
+    return new Error("Failed to get category by categoryId")
   }
 }
 
@@ -26,7 +26,7 @@ async function createCategory(categoryData) {
     return await categoryRepository.createCategory(categoryData)
   } catch (err) {
     console.error("Error in createCategory: ", err.stack)
-    throw new Error("Failed to create category")
+    return new Error("Failed to create category")
   }
 }
 
@@ -36,7 +36,7 @@ async function updateCategory(categoryId, categoryData) {
     return await categoryRepository.updateCategory(categoryId, categoryData)
   } catch (err) {
     console.error("Error in updateCategory: ", err.stack)
-    throw new Error("Failed to update category")
+    return new Error("Failed to update category")
   }
 }
 
@@ -46,7 +46,7 @@ async function deleteCategory(categoryId) {
     return await categoryRepository.deleteCategory(categoryId)
   } catch (err) {
     console.error("Error in deleteCategory: ", err.stack)
-    throw new Error("Failed to delete category")
+    return new Error("Failed to delete category")
   }
 }
 

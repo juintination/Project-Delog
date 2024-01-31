@@ -6,7 +6,7 @@ async function getAllProfiles() {
     return await profileRepository.getAllProfiles()
   } catch (err) {
     console.error("Error in getAllProfiles: ", err.stack)
-    throw new Error("Failed to get all profiles")
+    return new Error("Failed to get all profiles")
   }
 }
 
@@ -16,7 +16,7 @@ async function getProfileByProfileId(profileId) {
     return await profileRepository.getProfileByProfileId(profileId)
   } catch (err) {
     console.error("Error in getProfileByProfileId: ", err.stack)
-    throw new Error("Failed to get profile by profileId")
+    return new Error("Failed to get profile by profileId")
   }
 }
 
@@ -26,7 +26,7 @@ async function createProfile(profileData) {
     return await profileRepository.createProfile(profileData)
   } catch (err) {
     console.error("Error in createProfile: ", err.stack)
-    throw new Error("Failed to create profile")
+    return new Error("Failed to create profile")
   }
 }
 
@@ -36,7 +36,7 @@ async function updateProfile(profileId, profileData) {
     return await profileRepository.updateProfile(profileId, profileData)
   } catch (err) {
     console.error("Error in updateProfile: ", err.stack)
-    throw new Error("Failed to update profile")
+    return new Error("Failed to update profile")
   }
 }
 
@@ -46,7 +46,7 @@ async function deleteProfile(profileId) {
     return await profileRepository.deleteProfile(profileId)
   } catch (err) {
     console.error("Error in deleteProfile: ", err.stack)
-    throw new Error("Failed to delete profile")
+    return new Error("Failed to delete profile")
   }
 }
 

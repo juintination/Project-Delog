@@ -6,7 +6,7 @@ async function getAllUsersComments(userId) {
     return await commentRepository.getAllUsersComments(userId)
   } catch (err) {
     console.error("Error in getAllUsersComments: ", err.stack)
-    throw new Error("Failed to get all comments")
+    return new Error("Failed to get all comments")
   }
 }
 
@@ -16,7 +16,7 @@ async function getAllPostsComments(postId) {
     return await commentRepository.getAllPostsComments(postId)
   } catch (err) {
     console.error("Error in getAllPostsComments: ", err.stack)
-    throw new Error("Failed to get all comments")
+    return new Error("Failed to get all comments")
   }
 }
 
@@ -26,7 +26,7 @@ async function getCommentsByIds(userId, postId) {
     return await commentRepository.getCommentsByIds(userId, postId)
   } catch (err) {
     console.error("Error in getCommentsByIds: ", err.stack)
-    throw new Error("Failed to get comments by userId and postId")
+    return new Error("Failed to get comments by userId and postId")
   }
 }
 
@@ -36,7 +36,7 @@ async function getCommentByCommentId(commentId) {
     return await commentRepository.getCommentByCommentId(commentId)
   } catch (err) {
     console.error("Error in getCommentsByIds: ", err.stack)
-    throw new Error("Failed to get comment by commentId")
+    return new Error("Failed to get comment by commentId")
   }
 }
 
@@ -46,7 +46,7 @@ async function createComment(commentData) {
     return await commentRepository.createComment(commentData)
   } catch (err) {
     console.error("Error in createComment: ", err.stack)
-    throw new Error("Failed to create comment")
+    return new Error("Failed to create comment")
   }
 }
 
@@ -56,7 +56,7 @@ async function updateComment(commentId, commentData) {
     return await commentRepository.updateComment(commentId, commentData)
   } catch (err) {
     console.error("Error in updateComment: ", err.stack)
-    throw new Error("Failed to update comment")
+    return new Error("Failed to update comment")
   }
 }
 
@@ -66,7 +66,7 @@ async function deleteComment(commentId) {
     return await commentRepository.deleteComment(commentId)
   } catch (err) {
     console.error("Error in deleteComment: ", err.stack)
-    throw new Error("Failed to delete comment")
+    return new Error("Failed to delete comment")
   }
 }
 
