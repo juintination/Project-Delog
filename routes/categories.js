@@ -1,3 +1,10 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Categories
+ *   description: 카테고리 CRUD
+ */
+
 const express = require("express")
 const router = express.Router()
 
@@ -9,7 +16,30 @@ const {
   deleteCategory,
 } = require("../services/category-service")
 
-// 전체 카테고리 조회(READ)
+/**
+ * @swagger
+ * paths:
+ *  /category/all/{userId}:
+ *    get:
+ *      summary: 사용자의 모든 카테고리 조회
+ *      tags: [Categories]
+ *      description: 특정 사용자의 모든 카테고리를 조회합니다.
+ *      parameters:
+ *        - in: path
+ *          name: userId
+ *          required: true
+ *          description: 조회할 사용자의 ID
+ *          schema:
+ *            type: integer
+ *            format: int64
+ *      responses:
+ *        "200":
+ *          description: 사용자의 카테고리 목록
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ */
 router.get("/all/:userId", async (req, res) => {
   try {
     const userId = parseInt(req.params.userId)
@@ -22,7 +52,30 @@ router.get("/all/:userId", async (req, res) => {
   }
 })
 
-// 특정 카테고리 조회(READ)
+/**
+ * @swagger
+ * paths:
+ *  /category/{categoryId}:
+ *    get:
+ *      summary: 특정 카테고리 조회
+ *      tags: [Categories]
+ *      description: 특정 ID를 가진 카테고리를 조회합니다.
+ *      parameters:
+ *        - in: path
+ *          name: categoryId
+ *          required: true
+ *          description: 조회할 카테고리의 ID
+ *          schema:
+ *            type: integer
+ *            format: int64
+ *      responses:
+ *        "200":
+ *          description: 카테고리 정보
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ */
 router.get("/:categoryId", async (req, res) => {
   try {
     const categoryId = parseInt(req.params.categoryId)
@@ -35,7 +88,28 @@ router.get("/:categoryId", async (req, res) => {
   }
 })
 
-// 새로운 카테고리 추가(CREATE)
+/**
+ * @swagger
+ * paths:
+ *  /category/create:
+ *    post:
+ *      summary: 새로운 카테고리 추가
+ *      tags: [Categories]
+ *      description: 새로운 카테고리를 추가합니다.
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Category'
+ *      responses:
+ *        "200":
+ *          description: 추가된 카테고리 정보
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ */
 router.post("/create", async (req, res) => {
   try {
     const categoryData = req.body
@@ -48,7 +122,36 @@ router.post("/create", async (req, res) => {
   }
 })
 
-// 카테고리 수정(UPDATE)
+/**
+ * @swagger
+ * paths:
+ *  /category/update/{categoryId}:
+ *    put:
+ *      summary: 카테고리 정보 수정
+ *      tags: [Categories]
+ *      description: 특정 ID를 가진 카테고리의 정보를 수정합니다.
+ *      parameters:
+ *        - in: path
+ *          name: categoryId
+ *          required: true
+ *          description: 수정할 카테고리의 ID
+ *          schema:
+ *            type: integer
+ *            format: int64
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Category'
+ *      responses:
+ *        "200":
+ *          description: 수정된 카테고리 정보
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ */
 router.put("/update/:categoryId", async (req, res) => {
   try {
     const categoryId = parseInt(req.params.categoryId)
@@ -62,7 +165,26 @@ router.put("/update/:categoryId", async (req, res) => {
   }
 })
 
-// 카테고리 삭제(DELETE)
+/**
+ * @swagger
+ * paths:
+ *  /category/delete/{categoryId}:
+ *    delete:
+ *      summary: 카테고리 삭제
+ *      tags: [Categories]
+ *      description: 특정 ID를 가진 카테고리를 삭제합니다.
+ *      parameters:
+ *        - in: path
+ *          name: categoryId
+ *          required: true
+ *          description: 삭제할 카테고리의 ID
+ *          schema:
+ *            type: integer
+ *            format: int64
+ *      responses:
+ *        "204":
+ *          description: 삭제 성공
+ */
 router.delete("/delete/:categoryId", async (req, res) => {
   try {
     const categoryId = parseInt(req.params.categoryId)

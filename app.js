@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser")
 const session = require("express-session")
 const passport = require("passport")
 const flash = require("connect-flash")
+const { swaggerUi, specs } = require("./swagger/swagger")
 
 const app = express()
 app.set("port", process.env.PORT || 8080)
@@ -60,6 +61,8 @@ app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "jade")
 
 app.use(express.static(__dirname + "/public"))
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs))
 
 /* 404 오류 처리 */
 app.use((req, res, next) => {

@@ -1,0 +1,132 @@
+info:
+  version: "1.0.0"
+  title: "Schema info for API Documentation"
+  description: API for managing schemas.
+  contact:
+    name: "juintination"
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        birth:
+          type: string
+          format: date-time
+        email:
+          type: string
+        pwd:
+          type: string
+        is_admin:
+          type: integer
+        profile_id:
+          type: integer
+        categories:
+          type: array
+          items:
+            $ref: "#/components/schemas/Category"
+        comments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Comment"
+      required:
+        - id
+        - name
+        - birth
+        - email
+        - pwd
+        - is_admin
+        - profile_id
+
+    Profile:
+      type: object
+      properties:
+        id:
+          type: integer
+        pic:
+          type: string
+          format: binary
+        bio:
+          type: string
+        nickname:
+          type: string
+      required:
+        - id
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        user_id:
+          type: integer
+        posts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
+      required:
+        - id
+        - name
+        - user_id
+
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        is_public:
+          type: integer
+        category_id:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+        comments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Comment"
+      required:
+        - id
+        - title
+        - content
+        - created_at
+        - is_public
+        - category_id
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        is_secret:
+          type: boolean
+        user_id:
+          type: integer
+        post_id:
+          type: integer
+      required:
+        - id
+        - content
+        - created_at
+        - is_secret
+        - user_id
+        - post_id
