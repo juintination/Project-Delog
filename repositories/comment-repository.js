@@ -12,7 +12,7 @@ const getAllUsersComments = async (userId) => {
     }
   } catch (err) {
     console.error("Error in getAllUsersComments: ", err.stack)
-    throw new Error("Failed to get all comments")
+    return new Error("Failed to get all comments")
   }
 }
 
@@ -27,7 +27,7 @@ const getAllPostsComments = async (postId) => {
     }
   } catch (err) {
     console.error("Error in getAllPostsComments: ", err.stack)
-    throw new Error("Failed to get all comments")
+    return new Error("Failed to get all comments")
   }
 }
 
@@ -42,23 +42,19 @@ const getCommentsByIds = async (userId, postId) => {
     }
   } catch (err) {
     console.error("Error in getCommentsByIds: ", err.stack)
-    throw new Error("Failed to get comments by ids")
+    return new Error("Failed to get comments by ids")
   }
 }
 
 // 특정 댓글 조회(READ)
 const getCommentByCommentId = async (commentId) => {
   try {
-    const comments = await prisma.comment.findMany({
+    return await prisma.comment.findUnique({
       where: { id: commentId },
     })
-    if (comments.length) {
-      const comment = comments[0]
-      return comment
-    }
   } catch (err) {
     console.error("Error in getCommentByCommentId: ", err.stack)
-    throw new Error("Failed to get comment by commentId")
+    return new Error("Failed to get comment by commentId")
   }
 }
 
@@ -70,7 +66,7 @@ const createComment = async (commentData) => {
     })
   } catch (err) {
     console.error("Error in createComment: ", err.stack)
-    throw new Error("Failed to create comment")
+    return new Error("Failed to create comment")
   }
 }
 
@@ -83,7 +79,7 @@ const updateComment = async (commentId, commentData) => {
     })
   } catch (err) {
     console.error("Error in updateComment: ", err.stack)
-    throw new Error("Failed to update comment")
+    return new Error("Failed to update comment")
   }
 }
 
@@ -95,7 +91,7 @@ const deleteComment = async (commentId) => {
     })
   } catch (err) {
     console.error("Error in deleteComment: ", err.stack)
-    throw new Error("Failed to delete comment")
+    return new Error("Failed to delete comment")
   }
 }
 

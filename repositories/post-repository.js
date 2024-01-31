@@ -12,23 +12,19 @@ const getAllPosts = async (categoryId) => {
     }
   } catch (err) {
     console.error("Error in getAllPosts: ", err.stack)
-    throw new Error("Failed to get all posts")
+    return new Error("Failed to get all posts")
   }
 }
 
 // 특정 게시글 조회(READ)
 const getPostById = async (postId) => {
   try {
-    const posts = await prisma.post.findMany({
+    return await prisma.post.findUnique({
       where: { id: postId },
     })
-    if (posts.length) {
-      const post = posts[0]
-      return post
-    }
   } catch (err) {
     console.error("Error in getPostById: ", err.stack)
-    throw new Error("Failed to get post by id")
+    return new Error("Failed to get post by id")
   }
 }
 
@@ -40,7 +36,7 @@ const createPost = async (postData) => {
     })
   } catch (err) {
     console.error("Error in createPost: ", err.stack)
-    throw new Error("Failed to create post")
+    return new Error("Failed to create post")
   }
 }
 
@@ -53,7 +49,7 @@ const updatePost = async (postId, postData) => {
     })
   } catch (err) {
     console.error("Error in updatePost: ", err.stack)
-    throw new Error("Failed to update post")
+    return new Error("Failed to update post")
   }
 }
 
@@ -65,7 +61,7 @@ const deletePost = async (postId) => {
     })
   } catch (err) {
     console.error("Error in deletePost: ", err.stack)
-    throw new Error("Failed to delete post")
+    return new Error("Failed to delete post")
   }
 }
 

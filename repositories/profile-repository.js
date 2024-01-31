@@ -7,21 +7,17 @@ const getAllProfiles = async () => {
     return await prisma.profile.findMany()
   } catch (err) {
     console.error("Error in getAllProfiles: ", err.stack)
-    throw new Error("Failed to get all profiles")
+    return new Error("Failed to get all profiles")
   }
 }
 
 // 특정 프로필 조회(READ)
 const getProfileByProfileId = async (profileId) => {
   try {
-    const profiles = await prisma.profile.findMany({ where: { id: profileId } })
-    if (profiles.length) {
-      const profile = profiles[0]
-      return profile
-    }
+    return await prisma.profile.findUnique({ where: { id: profileId } })
   } catch (err) {
     console.error("Error in getProfileByProfileId: ", err.stack)
-    throw new Error("Failed to get profile by profileId")
+    return new Error("Failed to get profile by profileId")
   }
 }
 
@@ -33,7 +29,7 @@ const createProfile = async (profileData) => {
     })
   } catch (err) {
     console.error("Error in createProfile: ", err.stack)
-    throw new Error("Failed to create profile")
+    return new Error("Failed to create profile")
   }
 }
 
@@ -46,7 +42,7 @@ const updateProfile = async (profileId, profileData) => {
     })
   } catch (err) {
     console.error("Error in updateProfile: ", err.stack)
-    throw new Error("Failed to update profile")
+    return new Error("Failed to update profile")
   }
 }
 
@@ -58,7 +54,7 @@ const deleteProfile = async (profileId) => {
     })
   } catch (err) {
     console.error("Error in deleteProfile: ", err.stack)
-    throw new Error("Failed to delete profile")
+    return new Error("Failed to delete profile")
   }
 }
 

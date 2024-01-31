@@ -19,13 +19,9 @@ const getAllCategories = async (userId) => {
 // 특정 카테고리 조회(READ)
 const getCategoryById = async (categoryId) => {
   try {
-    const categories = await prisma.category.findMany({
+    return await prisma.category.findUnique({
       where: { id: categoryId },
     })
-    if (categories.length) {
-      const category = categories[0]
-      return category
-    }
   } catch (err) {
     console.error("Error in getCategoryById: ", err.stack)
     throw new Error("Failed to get category by id")

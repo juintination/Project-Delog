@@ -7,21 +7,17 @@ const getAllUsers = async () => {
     return await prisma.user.findMany()
   } catch (err) {
     console.error("Error in getAllUsers: ", err.stack)
-    throw new Error("Failed to get all users")
+    return new Error("Failed to get all users")
   }
 }
 
 // id로 특정 유저 조회(READ)
 const getUserById = async (userId) => {
   try {
-    const users = await prisma.user.findMany({ where: { id: userId } })
-    if (users.length) {
-      const user = users[0]
-      return user
-    }
+    return await prisma.user.findUnique({ where: { id: userId } })
   } catch (err) {
     console.error("Error in getUserById: ", err.stack)
-    throw new Error("Failed to get user by Id")
+    return new Error("Failed to get user by Id")
   }
 }
 
@@ -35,7 +31,7 @@ const getUserByEmail = async (userEmail) => {
     }
   } catch (err) {
     console.error("Error in getUserByEmail: ", err.stack)
-    throw new Error("Failed to get user by Email")
+    return new Error("Failed to get user by Email")
   }
 }
 
@@ -47,7 +43,7 @@ const createUser = async (userData) => {
     })
   } catch (err) {
     console.error("Error in createUser: ", err.stack)
-    throw new Error("Failed to create profile")
+    return new Error("Failed to create profile")
   }
 
   try {
@@ -63,7 +59,7 @@ const createUser = async (userData) => {
     return user
   } catch (err) {
     console.error("Error in createUser: ", err.stack)
-    throw new Error("Failed to create user")
+    return new Error("Failed to create user")
   }
 }
 
@@ -76,38 +72,19 @@ const updateUser = async (userId, userData) => {
     })
   } catch (err) {
     console.error("Error in updateUser: ", err.stack)
-    throw new Error("Failed to update user")
+    return new Error("Failed to update user")
   }
 }
 
 // 유저 삭제(DELETE)
 const deleteUser = async (userId) => {
   try {
-    await prisma.comment.deleteMany({
-      where: { user_id: userId },
-    })
-    await prisma.category.deleteMany({
-      where: { user_id: userId },
-    })
-    const users = await prisma.user.findMany({ where: { id: userId } })
-    if (users.length) {
-      var user = users[0]
-    }
-    await prisma.profile.delete({
-      where: { id: user.profile_id },
-    })
-  } catch (err) {
-    console.error("Error in deleteUser: ", err.stack)
-    throw new Error("Failed to delete profile")
-  }
-
-  try {
     return await prisma.user.delete({
       where: { id: userId },
     })
   } catch (err) {
     console.error("Error in deleteUser: ", err.stack)
-    throw new Error("Failed to delete user")
+    return new Error("Failed to delete user")
   }
 }
 
