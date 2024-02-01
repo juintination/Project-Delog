@@ -3,6 +3,17 @@ var LocalStrategy = require("passport-local").Strategy
 const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient()
 
+const Joi = require("joi")
+
+// Joi 스키마 정의
+const schema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().required(),
+  confirmPassword: Joi.string().required(),
+  name: Joi.string().required(),
+  birth: Joi.date().required(),
+})
+
 module.exports = new LocalStrategy(
   {
     usernameField: "email",
@@ -10,8 +21,22 @@ module.exports = new LocalStrategy(
     passReqToCallback: true,
   },
   async (req, email, password, done) => {
-    const user = req.body
-    if (user.password === user.confirmPassword) {
+    try {
+      // 요청 데이터 검증
+      const { error, value } = schema.validate(req.body)
+      if (error) {
+        return done(null, false, req.flash("signupMessage", error.message))
+      }
+
+      const user = value
+
+      if (user.password !== user.confirmPassword) {
+        return done(
+          null,
+          false,
+          req.flash("signupMessage", "Passwords do not match")
+        )
+      }
       req.body.pwd = user.password
       delete req.body.password
       delete req.body.confirmPassword
@@ -27,8 +52,8 @@ module.exports = new LocalStrategy(
         data: { name: "전체", user_id: createdUser.id },
       })
       return done(null, user)
-    } else {
-      return done(null, false, req.flash("signupMessage", "password incorrect"))
+    } catch (err) {
+      return done(err)
     }
   }
 )

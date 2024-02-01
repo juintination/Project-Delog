@@ -5,6 +5,14 @@ const fs = require("fs")
 const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient()
 
+const Joi = require("joi")
+
+// 프로필 업데이트 시 입력한 데이터 유효성 검사 스키마
+const profileUpdateSchema = Joi.object({
+  nickname: Joi.string().max(20).required(),
+  bio: Joi.string().allow("").optional(), // 선택적으로 빈 문자열 허용
+}).options({ allowUnknown: true })
+
 // 파일 저장 경로와 파일 이름 설정
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -246,6 +254,13 @@ module.exports = (app, passport) => {
     const updatedProfile = req.body
     const updatedProfileId = parseInt(updatedProfile.id)
 
+    // 요청 데이터 유효성 검사
+    const { error, value } = profileUpdateSchema.validate(updatedProfile)
+    if (error) {
+      req.flash("updateProfileMessage", error.message)
+      return res.redirect("/update_profile")
+    }
+
     let picBase64 = null
     if (req.file) {
       // 이미지 파일을 읽어와서 base64로 인코딩
@@ -255,17 +270,17 @@ module.exports = (app, passport) => {
       await prisma.profile.update({
         where: { id: updatedProfileId },
         data: {
-          nickname: updatedProfile.nickname,
+          nickname: value.nickname,
           pic: picBase64,
-          bio: updatedProfile.bio,
+          bio: value.bio,
         },
       })
     } else {
       await prisma.profile.update({
         where: { id: updatedProfileId },
         data: {
-          nickname: updatedProfile.nickname,
-          bio: updatedProfile.bio,
+          nickname: value.nickname,
+          bio: value.bio,
         },
       })
     }
