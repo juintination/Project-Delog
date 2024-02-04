@@ -5,7 +5,10 @@
   "scripts": {
     "start": "node server",
     "nodemon": "nodemon server",
-    "test": "jest"
+    "test": "jest",
+    "db:push": "npx prisma db push",
+    "db:generate": "npx prisma generate",
+    "docker:start": "npm run db:push && npm run db:generate && npm run start"
   },
   "dependencies": {
     "@prisma/client": "^5.8.1",
