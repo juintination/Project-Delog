@@ -1,26 +1,34 @@
 const request = require("supertest")
+const faker = require("faker")
 const app = require("../app")
 
 describe("Go Fit Server API TEST", () => {
-  test("should test that true === true", () => {
-    expect(true).toBe(true)
+  it("should test that true === true", () => {
+    expect(true)
   })
+})
 
-  test("should create a new user", (done) => {
+describe("POST /users", () => {
+  it("should create a new user", (done) => {
+    const userData = {
+      name: faker.name.findName(),
+      birth: faker.date.past().toISOString().split("T")[0],
+      email: faker.internet.email(),
+      pwd: faker.internet.password(),
+    }
+
     request(app)
       .post("/user/create")
-      .send({
-        name: "guest",
-        birth: "2024-02-03",
-        email: "guest@e2e.com",
-        pwd: "guest",
-      })
-      .then((response) => {
-        expect(response.status).toBe(200)
+      .send(userData)
+      .expect(200)
+      .expect("Content-Type", /json/)
+      .end((err, res) => {
+        if (err) return done(err)
+
+        expect(res.body).toHaveProperty("name", userData.name)
+        expect(res.body).toHaveProperty("email", userData.email)
+
         done()
-      })
-      .catch((error) => {
-        done(error)
       })
   })
 })
