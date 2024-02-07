@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  db:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    restart: "unless-stopped"
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_DATABASE=delog_schema
+    networks:
+      - system
+  api:
+    image: delog-image
+    ports:
+      - "8080:8080"
+    restart: "unless-stopped"
+    depends_on:
+      - db
+    networks:
+      - system
+networks:
+  system:
+    driver: bridge
