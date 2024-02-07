@@ -6,6 +6,10 @@
     "start": "node server",
     "nodemon": "nodemon server",
     "test": "jest",
+    "db:dev:up": "docker-compose up -d db",
+    "db:dev:down": "docker-compose down db",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
     "db:push": "npx prisma db push",
     "db:generate": "npx prisma generate",
     "docker:start": "npm run db:push && npm run db:generate && npm run start"
