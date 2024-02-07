@@ -10,12 +10,16 @@ module.exports = new LocalStrategy(
     passReqToCallback: true,
   },
   async (req, email, password, done) => {
-    const user = await prisma.user.findFirst({
-      where: { email: email },
-    })
+    try {
+      const user = await prisma.user.findFirst({
+        where: { email: email },
+      })
 
-    if (email === user.email) {
-      if (password === user.pwd) {
+      if (!user) {
+        return done(null, false, req.flash("loginMessage", "user not found"))
+      }
+
+      if (password === user.password) {
         return done(null, user)
       } else {
         return done(
@@ -24,8 +28,8 @@ module.exports = new LocalStrategy(
           req.flash("loginMessage", "password incorrect")
         )
       }
-    } else {
-      return done(null, false, req.flash("loginMessage", "email incorrect"))
+    } catch (error) {
+      return done(error)
     }
   }
 )
