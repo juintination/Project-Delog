@@ -19,7 +19,7 @@ module.exports = new LocalStrategy(
         return done(null, false, req.flash("loginMessage", "user not found"))
       }
 
-      if (password === user.password) {
+      if (password === user.pwd) {
         return done(null, user)
       } else {
         return done(
